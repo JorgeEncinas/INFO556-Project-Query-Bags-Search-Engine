@@ -1,0 +1,9 @@
+.venv/
+.vscode/
+.env
+indices/
+backup_indices/
+.ipynb_checkpoints/
+deprecated.py
+*.log
+__pycache__/
