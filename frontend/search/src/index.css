@@ -1,0 +1,97 @@
+@import "tailwindcss";
+
+:root {
+  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+
+  color-scheme: light dark;
+  color: rgba(255, 255, 255, 0.87);
+  background-color: #242424;
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.mustHave1 {
+  color: #42D923;
+}
+.mustHave2 {
+  color: #1EB400;
+}
+.mustHave3 {
+  color: #2BFF00;
+}
+.mustHave4 {
+  color:#68FF4A;
+}
+
+.forbidden1 {
+  color:#CC1212;
+}
+.forbidden2 {
+  color: #FB0404;
+}
+.forbidden3 {
+  color: #FF4C4C;
+}
+.forbidden4 {
+  color: #BE0D0D;
+}
+
+
+
+
+html, body, #root {
+  margin: 0;
+  height: 100%;
+  width: 100%;
+}
+
+.flaX { /* Animation from https://www.geeksforgeeks.org/css/css-floating-animation/ */
+  animation: floatX 3s ease-in-out infinite;
+}
+
+.flaY { /* Animation from https://www.geeksforgeeks.org/css/css-floating-animation/ */
+  animation: floatY 3s ease-in-out infinite;
+}
+
+@keyframes floatY { /* Animation from https://www.geeksforgeeks.org/css/css-floating-animation/ */
+  0% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-2px);
+  }
+  100% {
+    transform: translateY(0px);
+  }
+}
+
+@keyframes floatX { /* Animation from https://www.geeksforgeeks.org/css/css-floating-animation/ */
+  0% {
+    transform: translateX(0px);
+  }
+  50% {
+    transform: translateX(-4px);
+  }
+  100% {
+    transform: translateX(0px);
+  }
+}
+
+
+@media (prefers-color-scheme: light) {
+  :root {
+    color: #213547;
+    background-color: #ffffff;
+  }
+  a:hover {
+    color: #747bff;
+  }
+  button {
+    background-color: #f9f9f9;
+  }
+}

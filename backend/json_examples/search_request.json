@@ -1,0 +1,18 @@
+{
+    "search":"Flask tool",
+    "query_bags": {
+        "forbidden_words":[
+            "bottle"
+        ],
+        "must_have_words":[
+            "framework"
+        ],
+        "related_words": {
+            "Django": {
+                "added_by": "system",
+                "weight": 1.0
+            }
+        }
+    }
+    
+}
