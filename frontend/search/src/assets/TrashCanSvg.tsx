@@ -1,6 +1,6 @@
 const TrashCanSvg = () => {
     return (
-        <svg width="21" height="21" viewBox="0 0 21 21" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <svg width="19" height="19" viewBox="0 0 21 21" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path d="M7.71594 3.36541C8.06244 2.38508 8.9974 1.68271 10.0964 1.68271C11.1953 1.68271 12.1303 2.38508 12.4768 3.36541"
                 stroke="white" strokeWidth="2" strokeLinecap="round"/>
             <path d="M17.2477 5.0481H2.9447" stroke="white" strokeWidth="2" strokeLinecap="round"/>

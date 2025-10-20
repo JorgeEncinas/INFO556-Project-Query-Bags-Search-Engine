@@ -24,6 +24,10 @@ const relatedCase1Colors = [
     "#0D94A3"
 ]
 
+export type tagProps = {
+    bagType: queryBagTypes
+}
+
 const isRelatedWordsBag = (item : relatedWordsBag | Set<string>, bagType : queryBagTypes): item is relatedWordsBag => {
     //From https://stackoverflow.com/a/40718205
     // and from https://www.typescriptlang.org/docs/handbook/advanced-types.html#user-defined-type-guards
@@ -63,15 +67,21 @@ const useTransformIntoTags = ({ terms, bagType } : {
 
 
     let list_of_tags = Array<Tag>()
+    let props : tagProps = {
+        bagType: bagType
+    }
     if(isRelatedWordsBag(terms, bagType)) {
         //console.log("Entered relatedWordsBag")
+        
         Object.entries(terms).forEach(([term, items] : [term : string, items : relatedWordsBagItems]) => {
+           
             list_of_tags.push(
                 {
                     value: term,
                     key: term,
                     count: getFontSize(items.weight),
-                    color: getColor(items.addedBy)
+                    color: getColor(items.addedBy),
+                    props: props
                 } as Tag 
             )
         })
@@ -82,7 +92,8 @@ const useTransformIntoTags = ({ terms, bagType } : {
                 value: term,
                 key: term,
                 count: 1.1,
-                color: getColor(null)
+                color: getColor(null),
+                props: props 
                 } as Tag
             )
         })
@@ -91,7 +102,7 @@ const useTransformIntoTags = ({ terms, bagType } : {
     const customRenderer = (tag : Tag) => { //From the library example in https://madox2.github.io/react-tagcloud/
 
         return (
-            <QBTagCustomRenderer tag={tag}/>
+            <QBTagCustomRenderer tag={tag} key={tag.key} />
         )
         return (
             <span
