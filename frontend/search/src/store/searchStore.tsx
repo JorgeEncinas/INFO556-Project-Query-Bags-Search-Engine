@@ -1,5 +1,5 @@
-import { create, type StateCreator } from "zustand"
-import { createQueryBagSlice, type QueryBagSliceType } from "./slices/queryBagSlice"
+import { create } from "zustand"
+import { createQueryBagSlice, type QueryBagSliceType } from "../store/slices/queryBagSlice"
 //import { devtools } from "zustand/middleware"
 
 export interface SearchStoreType {

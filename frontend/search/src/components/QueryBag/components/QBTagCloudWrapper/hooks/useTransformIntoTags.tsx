@@ -1,9 +1,7 @@
-import type { queryBagTypes, relatedWordsBag, relatedWordsBagItems } from "../../../../../../types/queryBagTypes"
+import type { queryBagTypes, relatedWordsBag, relatedWordsBagItems } from "../../../../../types/queryBagTypes"
 import type { Tag } from "react-tagcloud"
-import { maxTagSize, minTagSize, tagScalingFactor, type tagPropsType } from "../QBTagCloud"
-import { useState } from "react"
-import WhiteCloseSvg from "../../../../../assets/WhiteCloseSvg"
-import QBTagCustomRenderer from "../QBTagCustomRenderer"
+import { maxTagSize, minTagSize, tagScalingFactor } from "../QBTagCloud"
+import QBTagCustomRenderer from "../../QBTagCustomRenderer.tsx/QBTagCustomRenderer"
 
 const mustHaveColors = [
     "#42D923",
@@ -65,7 +63,6 @@ const useTransformIntoTags = ({ terms, bagType } : {
         return Math.max(Math.min(maxTagSize, weight*tagScalingFactor), minTagSize)
     }
 
-
     let list_of_tags = Array<Tag>()
     let props : tagProps = {
         bagType: bagType
@@ -100,23 +97,8 @@ const useTransformIntoTags = ({ terms, bagType } : {
     }
 
     const customRenderer = (tag : Tag) => { //From the library example in https://madox2.github.io/react-tagcloud/
-
         return (
             <QBTagCustomRenderer tag={tag} key={tag.key} />
-        )
-        return (
-            <span
-                key={tag.key} //term
-                className={`flaX flaY px-[2px] font-semibold border border-yellow-200 h-8`}
-                style={{
-                    animationDelay: `${Math.random() * 2}s`,
-                    fontSize:`${tag.count}em`, //weight
-                    display:"inline-block",
-                    color: tag.color
-                }}
-            >
-                {tag.value} 
-            </span>
         )
     }
         

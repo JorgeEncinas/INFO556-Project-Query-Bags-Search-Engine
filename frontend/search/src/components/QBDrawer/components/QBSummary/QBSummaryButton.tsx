@@ -1,6 +1,6 @@
 import { useState } from "react";
 import type { queryBagTypes } from "../../../../types/queryBagTypes";
-import TrashCanSvg from "../../../assets/TrashCanSvg";
+import TrashCanSvg from "../../../../assets/TrashCanSvg";
 
 const QBSummaryButton = ({ count, bagType } : { count : number, bagType : queryBagTypes}) => {
 
@@ -19,9 +19,8 @@ const QBSummaryButton = ({ count, bagType } : { count : number, bagType : queryB
                 }    
             `}
         >
-
             <p
-                className={`${ isMouseOver ? "hidden" : ""} px-3 py-1 `}
+                className={`${ isMouseOver ? "hidden" : ""} px-3 py-1 select-none`}
             >
                 {count}
             </p>
@@ -31,7 +30,6 @@ const QBSummaryButton = ({ count, bagType } : { count : number, bagType : queryB
                 <TrashCanSvg />
             </div>
         </button>
-
     )
 }
 

@@ -1,5 +1,5 @@
-import { TagCloud, type TagCloudProps } from "react-tagcloud"
-import type { queryBagTypes, relatedWordsBag, relatedWordsBagItems } from "../../../../../types/queryBagTypes"
+import { TagCloud } from "react-tagcloud"
+import type { queryBagTypes, relatedWordsBag } from "../../../../types/queryBagTypes"
 import useTransformIntoTags from "./hooks/useTransformIntoTags"
 // ts-ignore from https://stackoverflow.com/a/54571297
 // I added it because it seems like the library does not have type implementations
@@ -33,7 +33,7 @@ const QBTagCloud = ({ terms, bagType } : {
     return (
         <TagCloud
             tags={list_of_tags}
-            className={"h-[50%] w-[70%] border border-b-rose-400 flex justify-between flex-wrap translate-y-6"}
+            className={"h-[55%] w-[75%] border border-b-rose-400 flex justify-around flex-wrap translate-y-6"}
             shuffle={true}
             minSize={minTagSize}
             maxSize={maxTagSize} //Get the max!
