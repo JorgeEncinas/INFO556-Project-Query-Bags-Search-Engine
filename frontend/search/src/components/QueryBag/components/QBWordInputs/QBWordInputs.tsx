@@ -1,3 +1,4 @@
+import { useSearchStore } from "../../../../store/searchStore"
 import type { queryBagTypes } from "../../../../types/queryBagTypes"
 
 const QBWordInputs = ({ bagType, wordInput, weightInput, isInputVisible, setQueryBagTextInput, setQueryBagWeightInput} : {
@@ -8,6 +9,9 @@ const QBWordInputs = ({ bagType, wordInput, weightInput, isInputVisible, setQuer
     setQueryBagTextInput: (text : string, bagType : queryBagTypes) => void,
     setQueryBagWeightInput: (text : string, bagType : queryBagTypes) => void,
 }) => {
+
+    const addUpdateConstraintWords = useSearchStore((state) => state.queryBagSlice.addUpdateConstraintWords)
+
     if(bagType !== "related") {
         return(
            <div className={"relative border-blue-950 border w-[100%]"}>
@@ -24,7 +28,15 @@ const QBWordInputs = ({ bagType, wordInput, weightInput, isInputVisible, setQuer
                     value={wordInput}
                     onKeyDown={(e) => {
                         if(e.key === "Enter") {
-                            console.log("Enter pressed!")
+                            if(wordInput.length > 0) {
+                                addUpdateConstraintWords(
+                                    wordInput,
+                                    weightInput="1",
+                                    bagType=bagType,
+                                    "user"
+                                )
+                                setQueryBagTextInput("", bagType)
+                            }
                         }
                     }}
                 />
@@ -48,7 +60,13 @@ const QBWordInputs = ({ bagType, wordInput, weightInput, isInputVisible, setQuer
                     value={wordInput}
                     onKeyDown={(e) => {
                         if(e.key === "Enter") {
-                            console.log("Enter pressed!")
+
+                            addUpdateConstraintWords(
+                                wordInput,
+                                weightInput=weightInput,
+                                bagType=bagType,
+                                "user"
+                            )
                         }
                     }}
                 />
@@ -62,7 +80,12 @@ const QBWordInputs = ({ bagType, wordInput, weightInput, isInputVisible, setQuer
                     }}
                     onKeyDown={(e) => {
                         if (e.key === "Enter") {
-                            console.log("Enter pressed!")
+                            addUpdateConstraintWords(
+                                wordInput,
+                                weightInput=weightInput,
+                                bagType=bagType,
+                                "user"
+                            )
                         }
                     }}
                     value={weightInput}

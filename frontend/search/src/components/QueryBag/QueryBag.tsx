@@ -12,6 +12,7 @@ const QueryBag = ({ bagType, wordInput, weightInput } : { bagType : queryBagType
 
     const setQueryBagTextInput = useSearchStore((state) => state.queryBagSlice.setQueryBagTextInput)
     const setQueryBagWeightInput = useSearchStore((state) => state.queryBagSlice.setQueryBagWeightInput)
+    const deleteConstraintWords = useSearchStore((state) => state.queryBagSlice.deleteConstraintWords)
 
     const displayName = bagType === "must-have"
         ? "Must-Have"
@@ -20,6 +21,14 @@ const QueryBag = ({ bagType, wordInput, weightInput } : { bagType : queryBagType
             : "Related"
             
     const [isInputVisible, setIsInputVisible] = useState<boolean>(false)
+
+    const deleteAllWordsAndCleanText = () => {
+        deleteConstraintWords("all", bagType)
+        //setQueryBagTextInput("", bagType)
+        if(bagType === "related") {
+            setQueryBagWeightInput("")
+        }
+    }
     
     //console.log(`bagtype ${bagType} === related - ${bagType === "related"}`)
     return (
@@ -29,7 +38,9 @@ const QueryBag = ({ bagType, wordInput, weightInput } : { bagType : queryBagType
             onMouseEnter={() => setIsInputVisible(true)}
             onMouseLeave={() => {
                 setQueryBagTextInput("", bagType)
-                setQueryBagWeightInput("", bagType)
+                if(bagType === "related") {
+                    setQueryBagWeightInput("") //, bagType
+                }
                 setIsInputVisible(false)
             }}
         >
@@ -44,7 +55,10 @@ const QueryBag = ({ bagType, wordInput, weightInput } : { bagType : queryBagType
             />
             <div className={"w-[100%] h-[100%] flex flex-col justify-end items-center border border-blue-500"}>
                 <QBTagCloudWrapper bagType={bagType} />
-                <QBTitle displayName={displayName} />
+                <QBTitle
+                    displayName={displayName}
+                    deleteFn={deleteAllWordsAndCleanText} 
+                />
             </div>
             
             

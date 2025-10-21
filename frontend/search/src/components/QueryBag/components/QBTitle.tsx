@@ -1,6 +1,9 @@
 import TrashCanSvg from "../../../assets/TrashCanSvg"
 
-const QBTitle = ({ displayName } : { displayName : "Must-Have" | "Forbidden" | "Related"}) => {
+const QBTitle = ({ displayName, deleteFn } : { 
+    displayName : "Must-Have" | "Forbidden" | "Related"
+    deleteFn: () => void
+}) => {
     return(
         <div
             id={"query-bag-title-and-clear-area"}
@@ -8,7 +11,9 @@ const QBTitle = ({ displayName } : { displayName : "Must-Have" | "Forbidden" | "
         >
             <h2 className={"font-bold select-none"}>{displayName} words</h2>
             <button
-                onClick={() => {console.log("Deleting!")}}
+                onClick={() => {
+                    deleteFn()
+                }}
                 className={"m-2 p-1 bg-red-500 rounded-3xl hover:cursor-pointer hover:bg-red-400 transition-all duration-200 ease-in-out"}
             >
                 <TrashCanSvg/>

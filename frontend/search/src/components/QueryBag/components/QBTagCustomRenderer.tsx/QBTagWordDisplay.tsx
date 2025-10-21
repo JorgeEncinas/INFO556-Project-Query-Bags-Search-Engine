@@ -21,7 +21,7 @@ const QBTagWordDisplay = ({ tag, tagProps } : {
             onClick={() => {
                 if (tagProps.bagType === "related") {
                     setQueryBagTextInput(tag.value, tagProps.bagType)
-                    setQueryBagWeightInput(String(tag.count), tagProps.bagType)
+                    setQueryBagWeightInput(String(tag.count)) //, tagProps.bagType
                 }
             }}
         >

@@ -1,9 +1,15 @@
 import { create } from "zustand"
 import { createQueryBagSlice, type QueryBagSliceType } from "../store/slices/queryBagSlice"
+import { createResultsSlice, type ResultsSliceType } from "./slices/resultsSlice";
 //import { devtools } from "zustand/middleware"
+
+export type SearchPagesType = "home" | "results"
 
 export interface SearchStoreType {
     queryBagSlice: QueryBagSliceType;
+    resultsSlice: ResultsSliceType;
+    displayedPage: SearchPagesType;
+    setDisplayedPage : (newPage : SearchPagesType) => void
 }
 
 // Help from documentation
@@ -13,7 +19,17 @@ export interface SearchStoreType {
 export const useSearchStore = create<SearchStoreType>()(
     (set, get, store) : SearchStoreType => { //Format from https://refine.dev/blog/zustand-react-state/#getting-started-with-zustand
         return {
-            queryBagSlice: createQueryBagSlice(set, get, store)
+            queryBagSlice: createQueryBagSlice(set, get, store),
+            resultsSlice: createResultsSlice(set, get, store),
+            displayedPage: "home",
+            setDisplayedPage: (newPage : SearchPagesType) => {
+                set((state) => {
+                    return {
+                        ...state,
+                        displayedPage: newPage
+                    }
+                })
+            }
         }
     }
 )

@@ -12,18 +12,16 @@ export type QueryBagSliceType = {
     related_words_text_input: string,
     related_words_weight_input: string,
     forbidden_words_text_input: string,
-    forbidden_words_weight_input: string,
+    //forbidden_words_weight_input: string,
     must_have_words_text_input: string,
-    must_have_words_weight_input: string,
+    //must_have_words_weight_input: string,
     setQueryBagTextInput: ( text : string, bagType: queryBagTypes ) => void,
-    setQueryBagWeightInput: ( weight : string, bagType: queryBagTypes) => void,
+    setQueryBagWeightInput: ( weight : string ) => void,
     related_words: relatedWordsBag,
     forbidden_words: Set<string>,
     must_have_words: Set<string>,
-    addConstraintWords : (words_to_add : Array<string>, constraintType: queryBagTypes) => void,
-    deleteConstraintWords: (words_to_delete : Set<string> | "all", constraintType: queryBagTypes) => void,
-    //deleteRelatedWords: (words_to_delete : Set<string>) => void,
-    addUpdateRelatedWords: (new_related_words : relatedWordsBag) => void
+    addUpdateConstraintWords : (textInput : string, weightInput: string, bagType: queryBagTypes, addedBy:"user"|"system") => void,
+    deleteConstraintWords: (words_to_delete : Set<string> | "all", constraintType: queryBagTypes) => void
 }
 
 // Guidance on slice type definition from https://zustand.docs.pmnd.rs/guides/typescript
@@ -33,9 +31,9 @@ export const createQueryBagSlice : StateCreator<SearchStoreType, [], [], QueryBa
     related_words_text_input: "",
     related_words_weight_input: "",
     forbidden_words_text_input: "",
-    forbidden_words_weight_input: "",
+    //forbidden_words_weight_input: "",
     must_have_words_text_input: "",
-    must_have_words_weight_input: "",
+    //must_have_words_weight_input: "",
     setQueryBagTextInput: (text : string, bagType : queryBagTypes) => set((state) => {
         if (bagType === "forbidden") {
             return {
@@ -63,9 +61,9 @@ export const createQueryBagSlice : StateCreator<SearchStoreType, [], [], QueryBa
             }
         }
     }),
-    setQueryBagWeightInput: ( weight : string, bagType: queryBagTypes) => {
+    setQueryBagWeightInput: ( weight : string) => { //, bagType: queryBagType
         set((state) => {
-            if (bagType === "forbidden") {
+            /*if (bagType === "forbidden") {
                 return {
                     ...state,
                     queryBagSlice: {
@@ -81,21 +79,21 @@ export const createQueryBagSlice : StateCreator<SearchStoreType, [], [], QueryBa
                         must_have_words_weight_input: weight
                     }
                 }
-            } else {
-                return {
-                    ...state,
-                    queryBagSlice: {
-                        ...state.queryBagSlice,
-                        related_words_weight_input: weight
-                    }
+            } */ 
+            return {
+                ...state,
+                queryBagSlice: {
+                    ...state.queryBagSlice,
+                    related_words_weight_input: weight
                 }
             }
+            
         })
     },
     related_words: queryTagComplexData,//{},
     forbidden_words: new Set<string>(queryTagSetData),
     must_have_words: new Set<string>(queryTagSetData2),
-    addUpdateConstraintWords : (textInput : string, weightInput: string, bagType: queryBagTypes) => {
+    addUpdateConstraintWords : (textInput : string, weightInput: string, bagType: queryBagTypes, addedBy:"user"|"system") => {
         //Check that no fields are empty
         if (textInput === "" || weightInput === "") {
             return
@@ -112,7 +110,7 @@ export const createQueryBagSlice : StateCreator<SearchStoreType, [], [], QueryBa
                     ...state,
                     queryBagSlice: {
                         ...state.queryBagSlice,
-                        must_have_words: new Set<string>([...state.queryBagSlice.forbidden_words, textInput]) // From https://stackoverflow.com/a/55603608
+                        must_have_words: new Set<string>([...state.queryBagSlice.must_have_words, textInput]) // From https://stackoverflow.com/a/55603608
                     }
                 }
             } else if (bagType == "forbidden") {
@@ -130,8 +128,8 @@ export const createQueryBagSlice : StateCreator<SearchStoreType, [], [], QueryBa
                         ...state.queryBagSlice,
                         related_words: {
                             ...state.queryBagSlice.related_words,
-                            term: {
-                                "addedBy":"user",
+                            [textInput]: {
+                                "addedBy": addedBy,
                                 "weight": newWeight
                             }
                         }
@@ -141,45 +139,16 @@ export const createQueryBagSlice : StateCreator<SearchStoreType, [], [], QueryBa
             
         })
     },
-    addConstraintWords : (words_to_add : Array<string>, constraintType: queryBagTypes) => set((state) => {
-        if (constraintType === "forbidden") {
-            return {
-                ...state,
-                queryBagSlice: {
-                    ...state.queryBagSlice,
-                    forbidden_words: new Set<string>([...state.queryBagSlice.forbidden_words, ...words_to_add]) // From https://stackoverflow.com/a/55603608
-                }
-            }
-        } else {
-            return {
-                ...state,
-                queryBagSlice: {
-                    ...state.queryBagSlice,
-                    must_have_words: new Set<string>([...state.queryBagSlice.must_have_words, ...words_to_add])
-                }
-            }
-        }
-    }),
     deleteConstraintWords: (words_to_delete : Set<string> | "all", constraintType: queryBagTypes) => set((state) => {
-        //console.log("Delete fn called on slice")
-        //console.log(` Deleting on ${constraintType}`)
-        //console.log(`${words_to_delete !== "all" ? words_to_delete.size : "all"}`)
-        //console.log(Array.from(words_to_delete)) //From https://stackoverflow.com/a/64634534
         if (constraintType === "forbidden") {
-            //console.log("Deletion entered forbidden")
             let newSet = new Set<string>()
             if (words_to_delete !== "all") { // When "all" the set remains empty, deleting all entries.
                 state.queryBagSlice.forbidden_words.forEach((word : string) => {
                     if (!(words_to_delete.has(word))) {
-                        //console.log(`Word ${word} is NOT on words_to_delete`)
                         newSet.add(word)
-                    } /*else {
-                        console.log(`Word ${word} is on words_to_delete`)
-                    }*/
+                    }
                 })
             }
-            //console.log(`new set:`)
-            //console.log(Array.from(newSet))
             return {
             ...state,
             queryBagSlice: {
@@ -188,9 +157,8 @@ export const createQueryBagSlice : StateCreator<SearchStoreType, [], [], QueryBa
             }
         }
         } else if (constraintType === "must-have") { //"must-have"
-            console.log("Deletion entered must-have")
             let newSet = new Set<string>()
-            if (words_to_delete !== "all") { // When "all" the set remains empty, deleting all entries.
+            if (words_to_delete !== "all") { // When "all" the set remains empty, deleting all entries.   
                 state.queryBagSlice.must_have_words.forEach((word : string) => {
                     if (!(words_to_delete.has(word))) {
                         newSet.add(word)
@@ -233,20 +201,6 @@ export const createQueryBagSlice : StateCreator<SearchStoreType, [], [], QueryBa
                 }
             }
             
-        }
-    }),
-    addUpdateRelatedWords: (new_related_words : relatedWordsBag) => set((state) => {
-        let state_copy_related_words = {...state.queryBagSlice.related_words }
-        
-        for(const [term, wordsBag] of Object.entries(new_related_words)) {
-            state_copy_related_words[term] = wordsBag
-        }
-        return {
-            ...state,
-            queryBagSlice: {
-                ...state.queryBagSlice,
-                related_words: state_copy_related_words
-            }
         }
     })
 })

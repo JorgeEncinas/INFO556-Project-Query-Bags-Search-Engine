@@ -2,7 +2,11 @@ import { useState } from "react";
 import type { queryBagTypes } from "../../../../types/queryBagTypes";
 import TrashCanSvg from "../../../../assets/TrashCanSvg";
 
-const QBSummaryButton = ({ count, bagType } : { count : number, bagType : queryBagTypes}) => {
+const QBSummaryButton = ({ count, bagType, deleteFn } : { 
+    count : number,
+    bagType : queryBagTypes,
+    deleteFn : () => void
+}) => {
 
     const [isMouseOver, setIsMouseOver] = useState<boolean>(false)
 
@@ -18,6 +22,7 @@ const QBSummaryButton = ({ count, bagType } : { count : number, bagType : queryB
                         : " bg-green-500 hover:bg-green-400 "
                 }    
             `}
+            onClick={() => deleteFn()}
         >
             <p
                 className={`${ isMouseOver ? "hidden" : ""} px-3 py-1 select-none`}

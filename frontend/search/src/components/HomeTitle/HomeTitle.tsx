@@ -1,6 +1,7 @@
 import BurlapSvg from "../../assets/BurlapSvg"
 
 const HomeTitle = () => {
+
     return (
         <div
             className={"flex justify-center items-center w-[100%]"}
