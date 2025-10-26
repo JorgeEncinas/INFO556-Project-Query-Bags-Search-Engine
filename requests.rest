@@ -1,0 +1,33 @@
+### /* Requests done with consulting https://brianbunke.com/blog/2019/09/16/rest-client-vs-code/ */
+GET http://127.0.0.1:5000/
+###
+GET http://127.0.0.1:5000/search
+###
+POST http://127.0.0.1:5000/search
+Content-Type: application/json
+
+{
+    "query": "the andromeda galaxy",
+    "query_bags": {
+        "forbidden_words": ["monkey"],
+        "must_have_words": ["sun", "star"],
+        "related_words": {
+            "planet": {
+                "addedBy":"user",
+                "weight":1.5
+            },
+            "jupyter": {
+                "addedBy":"system",
+                "weight":1.2
+            }
+
+        }
+    }
+}
+###
+POST http://127.0.0.1:5000/related
+Content-Type: application/json
+
+{
+    "query":"dancing with the stars"
+}

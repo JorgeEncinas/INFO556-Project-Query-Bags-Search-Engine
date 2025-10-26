@@ -1,17 +1,15 @@
+import { Route, Routes } from 'react-router'
 import HomePage from './pages/HomePage'
 import ResultsPage from './pages/ResultsPage'
-import { useSearchStore } from './store/searchStore'
+
 function App() {
 
-  const displayedPage = useSearchStore((state) => state.displayedPage)
-  
-  if(displayedPage === "results") {
-    return (
-      <ResultsPage />
-    )
-  }
+  // Routing done consulting https://www.robinwieruch.de/react-router/
   return (
-    <HomePage />
+    <Routes>
+      <Route index path="/" element={ <HomePage /> }/>
+      <Route path="results" element={ <ResultsPage /> } />
+    </Routes>
   )
 }
 

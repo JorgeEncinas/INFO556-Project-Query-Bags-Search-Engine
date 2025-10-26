@@ -1,6 +1,7 @@
 export type relatedWordsBagItems = {
     "addedBy": "system"|"user",
-    "weight": number
+    "weight": number,
+    "added": boolean  //Whether the item is a recommendation that has been added or not
 }
 export type relatedWordsBag = { [ term : string] : relatedWordsBagItems }
 

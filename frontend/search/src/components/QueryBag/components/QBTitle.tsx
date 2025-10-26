@@ -7,7 +7,7 @@ const QBTitle = ({ displayName, deleteFn } : {
     return(
         <div
             id={"query-bag-title-and-clear-area"}
-            className={"flex justify-center items-center p-1"}
+            className={"flex justify-center items-center px-1 mt-2 "}
         >
             <h2 className={"font-bold select-none"}>{displayName} words</h2>
             <button

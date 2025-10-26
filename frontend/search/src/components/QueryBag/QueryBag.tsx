@@ -10,9 +10,13 @@ import QBSvgWrapper from "./components/QBSvgWrapper"
 
 const QueryBag = ({ bagType, wordInput, weightInput } : { bagType : queryBagTypes, wordInput: string, weightInput: string}) => {
 
-    const setQueryBagTextInput = useSearchStore((state) => state.queryBagSlice.setQueryBagTextInput)
-    const setQueryBagWeightInput = useSearchStore((state) => state.queryBagSlice.setQueryBagWeightInput)
-    const deleteConstraintWords = useSearchStore((state) => state.queryBagSlice.deleteConstraintWords)
+    const {
+        setQueryBagTextInput,
+        setQueryBagWeightInput,
+        deleteConstraintWords,
+        disableRelatedWordsTextInput,
+        setDisableRelatedWordsTextInput
+    } = useSearchStore((state) => state.queryBagSlice)
 
     const displayName = bagType === "must-have"
         ? "Must-Have"
@@ -34,12 +38,13 @@ const QueryBag = ({ bagType, wordInput, weightInput } : { bagType : queryBagType
     return (
         <div
             id={"query-bag-overall-container"}
-            className={"h-[100%] w-[30%] mt-5 flex flex-col justify-center items-center"}
+            className={"h-[100%] w-[100%] mt-2 flex flex-col justify-center items-center"}
             onMouseEnter={() => setIsInputVisible(true)}
             onMouseLeave={() => {
                 setQueryBagTextInput("", bagType)
                 if(bagType === "related") {
                     setQueryBagWeightInput("") //, bagType
+                    setDisableRelatedWordsTextInput(false)
                 }
                 setIsInputVisible(false)
             }}
@@ -50,10 +55,14 @@ const QueryBag = ({ bagType, wordInput, weightInput } : { bagType : queryBagType
                 wordInput={wordInput}
                 weightInput={weightInput}
                 isInputVisible={isInputVisible}
+                disabled={bagType !== "related" 
+                    ? false 
+                    : disableRelatedWordsTextInput
+                }
                 setQueryBagTextInput={setQueryBagTextInput}
                 setQueryBagWeightInput={setQueryBagWeightInput}
             />
-            <div className={"w-[100%] h-[100%] flex flex-col justify-end items-center border border-blue-500"}>
+            <div className={`${import.meta.env.VITE_BORDERS === "ON" ? "border border-blue-500" : ""} w-[100%] h-[100%] flex flex-col justify-end items-center`}>
                 <QBTagCloudWrapper bagType={bagType} />
                 <QBTitle
                     displayName={displayName}

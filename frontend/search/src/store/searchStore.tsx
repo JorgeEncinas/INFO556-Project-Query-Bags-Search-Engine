@@ -9,6 +9,8 @@ export interface SearchStoreType {
     queryBagSlice: QueryBagSliceType;
     resultsSlice: ResultsSliceType;
     displayedPage: SearchPagesType;
+    query : string,
+    setQuery : (newValue : string) => void,
     setDisplayedPage : (newPage : SearchPagesType) => void
 }
 
@@ -19,9 +21,18 @@ export interface SearchStoreType {
 export const useSearchStore = create<SearchStoreType>()(
     (set, get, store) : SearchStoreType => { //Format from https://refine.dev/blog/zustand-react-state/#getting-started-with-zustand
         return {
+            query: "",
             queryBagSlice: createQueryBagSlice(set, get, store),
             resultsSlice: createResultsSlice(set, get, store),
             displayedPage: "home",
+            setQuery : (newValue : string) => {
+                set((state) => {
+                    return {
+                        ...state,
+                        query: newValue
+                    }
+                })
+            },
             setDisplayedPage: (newPage : SearchPagesType) => {
                 set((state) => {
                     return {

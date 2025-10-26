@@ -1,7 +1,8 @@
 import type { StateCreator } from "zustand"
-import type { queryBagTypes, relatedWordsBag } from "../../types/queryBagTypes"
+import type { queryBagTypes, relatedWordsBag, relatedWordsBagItems } from "../../types/queryBagTypes"
 import type { SearchStoreType } from "../../store/searchStore"
-import { queryTagComplexData, queryTagSetData, queryTagSetData2 } from "../../../data/queryTagData"
+//import { queryTagComplexData, queryTagSetData, queryTagSetData2 } from "../../../data/queryTagData"
+import type { SuggestedTerm } from "../../types/resultsTypes"
 
 export const captureNumbers = new RegExp( //Followed this tutorial to help me with RegEx for React
     //https://www.tutorialspoint.com/regex-in-reactjs
@@ -15,12 +16,16 @@ export type QueryBagSliceType = {
     //forbidden_words_weight_input: string,
     must_have_words_text_input: string,
     //must_have_words_weight_input: string,
-    setQueryBagTextInput: ( text : string, bagType: queryBagTypes ) => void,
+    disableRelatedWordsTextInput: boolean,
+    setDisableRelatedWordsTextInput: (newValue : boolean) => void,
+    setQueryBagTextInput: ( text : string, bagType: queryBagTypes) => void,
     setQueryBagWeightInput: ( weight : string ) => void,
+    deleteRelatedWords : () => void,
     related_words: relatedWordsBag,
     forbidden_words: Set<string>,
     must_have_words: Set<string>,
     addUpdateConstraintWords : (textInput : string, weightInput: string, bagType: queryBagTypes, addedBy:"user"|"system") => void,
+    addSuggestedRelatedWords : (terms : SuggestedTerm[]) => void,
     deleteConstraintWords: (words_to_delete : Set<string> | "all", constraintType: queryBagTypes) => void
 }
 
@@ -34,6 +39,41 @@ export const createQueryBagSlice : StateCreator<SearchStoreType, [], [], QueryBa
     //forbidden_words_weight_input: "",
     must_have_words_text_input: "",
     //must_have_words_weight_input: "",
+    disableRelatedWordsTextInput: false,
+    setDisableRelatedWordsTextInput: (newValue : boolean) => {
+        set((state) => {
+            return {
+                ...state,
+                queryBagSlice: {
+                    ...state.queryBagSlice,
+                    disableRelatedWordsTextInput: newValue
+                }
+            }
+        })
+    },
+    deleteRelatedWords : () => {
+        set((state) => {
+            let copy_of_related_words : relatedWordsBag = state.queryBagSlice.related_words
+            let new_related_words : relatedWordsBag = {}
+
+            Object.entries(copy_of_related_words).forEach(([term, items] : [
+                term : string,
+                items: relatedWordsBagItems
+            ]) => {
+                if (items.added) {
+                    new_related_words[term] = items
+                }
+            })
+
+            return {
+                ...state,
+                queryBagSlice: {
+                    ...state.queryBagSlice,
+                    related_words: new_related_words
+                }
+            }
+        })
+    },
     setQueryBagTextInput: (text : string, bagType : queryBagTypes) => set((state) => {
         if (bagType === "forbidden") {
             return {
@@ -90,9 +130,54 @@ export const createQueryBagSlice : StateCreator<SearchStoreType, [], [], QueryBa
             
         })
     },
-    related_words: queryTagComplexData,//{},
-    forbidden_words: new Set<string>(queryTagSetData),
-    must_have_words: new Set<string>(queryTagSetData2),
+    related_words: {},//queryTagComplexData,//{},
+    forbidden_words: new Set<string>(),//new Set<string>(queryTagSetData),
+    must_have_words: new Set<string>(),//new Set<string>(queryTagSetData2),
+    addSuggestedRelatedWords : (terms : SuggestedTerm[]) => {
+        set((state) => {
+
+            // STEP 1: GET A COPY OF THE CURRENT RELATED WORDS
+            let copy_of_related_terms = { 
+                ...state.queryBagSlice.related_words
+            }
+        
+            // STEP 2: GRAB JUST THE WORDS THAT ARE OFFICIALLY ADDED
+            let related_terms : relatedWordsBag = {}
+            Object.entries(copy_of_related_terms).forEach(([key, items] : [
+                key: string,
+                items: relatedWordsBagItems
+            ]) => {
+                if(items.added === true) {
+                    related_terms[key] = items
+                }
+            })
+
+            // STEP 3: FOR EACH OF THE SUGGESTED WORDS, JUST CHECK
+            //         THAT IT HASN'T BEEN ADDED YET!
+            //         Effectively, we deleted all gray words, and just add
+            //         new gray words.
+            terms.forEach(([term, weight] : [
+                term : string,
+                weight : number
+            ]) => {
+                if(!(term in related_terms)) {
+                    related_terms[term] = {
+                        addedBy: "system",
+                        weight: Math.min(Math.max(weight, 0.9), 1.0),
+                        added: false
+                    }
+                }
+            })
+
+            return {
+                ...state,
+                queryBagSlice: {
+                    ...state.queryBagSlice,
+                    related_words: related_terms
+                }
+            }
+        })
+    },
     addUpdateConstraintWords : (textInput : string, weightInput: string, bagType: queryBagTypes, addedBy:"user"|"system") => {
         //Check that no fields are empty
         if (textInput === "" || weightInput === "") {
@@ -130,7 +215,8 @@ export const createQueryBagSlice : StateCreator<SearchStoreType, [], [], QueryBa
                             ...state.queryBagSlice.related_words,
                             [textInput]: {
                                 "addedBy": addedBy,
-                                "weight": newWeight
+                                "weight": newWeight,
+                                "added":true
                             }
                         }
                     }

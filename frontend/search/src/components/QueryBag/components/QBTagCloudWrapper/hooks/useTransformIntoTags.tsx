@@ -1,6 +1,6 @@
 import type { queryBagTypes, relatedWordsBag, relatedWordsBagItems } from "../../../../../types/queryBagTypes"
 import type { Tag } from "react-tagcloud"
-import { maxTagSize, minTagSize, tagScalingFactor } from "../QBTagCloud"
+import { maxTagSize, minTagSize, tagScalingFactor } from "../components/QBTagCloud"
 import QBTagCustomRenderer from "../../QBTagCustomRenderer.tsx/QBTagCustomRenderer"
 
 const mustHaveColors = [
@@ -23,7 +23,9 @@ const relatedCase1Colors = [
 ]
 
 export type tagProps = {
-    bagType: queryBagTypes
+    bagType: queryBagTypes,
+    added: boolean,
+    weight: number
 }
 
 const isRelatedWordsBag = (item : relatedWordsBag | Set<string>, bagType : queryBagTypes): item is relatedWordsBag => {
@@ -64,9 +66,6 @@ const useTransformIntoTags = ({ terms, bagType } : {
     }
 
     let list_of_tags = Array<Tag>()
-    let props : tagProps = {
-        bagType: bagType
-    }
     if(isRelatedWordsBag(terms, bagType)) {
         //console.log("Entered relatedWordsBag")
         
@@ -78,7 +77,11 @@ const useTransformIntoTags = ({ terms, bagType } : {
                     key: term,
                     count: getFontSize(items.weight),
                     color: getColor(items.addedBy),
-                    props: props
+                    props: {
+                        bagType: bagType,
+                        added: items.added,
+                        weight: items.weight
+                    } as tagProps
                 } as Tag 
             )
         })
@@ -90,8 +93,12 @@ const useTransformIntoTags = ({ terms, bagType } : {
                 key: term,
                 count: 1.1,
                 color: getColor(null),
-                props: props 
-                } as Tag
+                props: {
+                    bagType: bagType,
+                    added: true,
+                    weight: 1.1
+                } as tagProps
+            } as Tag
             )
         })
     }

@@ -1,0 +1,6 @@
+//To run the Flask Application (Backend)
+.\venv\Scripts\activate
+py -m flask --app searchbk run
+
+//To run the frontend
+pnpm run dev

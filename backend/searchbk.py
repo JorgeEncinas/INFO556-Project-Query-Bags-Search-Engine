@@ -1,4 +1,4 @@
-from flask import Flask, jsonify
+from flask import Flask, jsonify, request
 from flask_cors import CORS
 import pyterrier as pt
 from pathlib import Path
@@ -12,7 +12,7 @@ CORS(app) #From https://pypi.org/project/flask-cors/
 #"E:/code/ua/s2/info556/pyterrier_ui/backend/indices/msmarco-document"
 
 # INDEX
-index = pt.IndexFactory.of("./indices/msmarco-document/data.properties") #str/index_path
+index = pt.IndexFactory.of("E:/code/ua/s2/info556/pyterrier_ui/backend/indices/msmarco-document/data.properties") #str/index_path
 bm25 = pt.terrier.Retriever(index, wmodel="BM25")   # RETRIEVER
 bo1 = pt.rewrite.Bo1QueryExpansion(index)           # QUERY EXPANSION
 
@@ -30,7 +30,11 @@ def index():
     return "<p>Hello, World!</p>"
 
 @app.route("/search", methods=["POST"])
-def search(request):
+def search():
+    print("Entered search endpoint?")
+    print(request.method) 
+    content = request.json #From  https://stackoverflow.com/a/35614301
+    print(content)
     if request.method == "POST": #From https://www.geeksforgeeks.org/python/flask-http-methods-handle-get-post-requests/
         # STEP 0: WEIGHT DEFINITIONS
         original_query_weight = 2.0
@@ -38,11 +42,11 @@ def search(request):
         system_related_weight = 1.0
         
         # STEP 1: EXTRACT FORM FIELDS
-        user_query = request.form["query"]
-        query_bags = request.form["query_bags"]
-        forbidden_words = query_bags.forbidden_words #List
-        must_have_words = query_bags.must_have_words #List
-        related_words = query_bags.related_words #Dict where each key tells you who added the word, AND the weight
+        user_query = content["query"]
+        query_bags = content["query_bags"]
+        forbidden_words = query_bags["forbidden_words"] #List
+        must_have_words = query_bags["must_have_words"] #List
+        related_words = query_bags["related_words"] #Dict where each key tells you who added the word, AND the weight
         
         # STEP 2: PREPARE TO JOIN QUERY BAG TERMS.
         new_user_query = [f"{word}^{original_query_weight}" for word in user_query.split()] #Split from https://stackoverflow.com/a/8113787
@@ -70,7 +74,7 @@ def search(request):
 
         # STEP 3.3: RELATED WORDS (& WEIGHTS)
         for word in related_words.keys():
-            added_by = related_words[word]["added_by"]
+            added_by = related_words[word]["addedBy"]
             weight = related_words[word]["weight"]
             # STEP 3.3.1 Creating a fallback weight.
             weight = weight if weight != -1 else (user_related_weight if added_by == "user" else system_related_weight)
@@ -91,25 +95,44 @@ def search(request):
         search_data = text_getter(search_results[:100])
 
         trimmed_data = search_data[["title", "body", "url"]] #From https://stackoverflow.com/a/61142647
-        return jsonify({
-            "success":True,
-            "data": trimmed_data.to_json() # From https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.to_json.html
-        })
+        return trimmed_data.to_json()
+        #return jsonify({
+        #    "success":True,
+        #    "data": trimmed_data.to_json() # From https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.to_json.html
+        #})
     # ALTERNATIVE FLOW: UNAUTHORIZED ACCESS. Return error  
     else:
-        return jsonify({
-            "success":False
-        })
+        print("Entered get?")
+        return "Method not allowed", 405
 
 @app.route("/related", methods=["POST"])
-def get_related_terms(request):
+def get_related_terms():
     if request.method == "POST":
         # STEP 1: RECEIVE THE QUERY
-        query = request.form["query"]
+        content = request.json
+        query = content["query"]
 
         # STEP 2: EXPAND THE QUERY
         expansion = bo1(bm25.search(query))
-        new_words = expansion["query"].item()
+        print(type(expansion))
+        new_words = ""
+        try: 
+            new_words = expansion["query"].item()
+        except:
+            print("Operation 1 failed")
+        
+        try:
+            new_words = expansion["query"].tolist() #From https://stackoverflow.com/a/61071890
+            print(f"Converted to list: {new_words}")
+            if(len(new_words) < 1):
+                return jsonify({
+                    "related_words": {}
+                })
+            else:
+                new_words = " ".join(new_words)
+        except:
+            print("Operation 2 failed")
+
 
         # STEP 3: EXTRACT THE TERMS AND THEIR WEIGHTS
         find_term_and_weights = r"(?P<term>[a-zA-Z0-9]+)\^(?P<weight>[0-9\.]+)"
@@ -125,11 +148,11 @@ def get_related_terms(request):
         set_oq = set(oq_matches) #From https://stackoverflow.com/a/15768778
         extended_words = [(term, round(float(weight), 2)) for (term, weight) in matches if matches[0] not in set_oq]
 
+        print(f"Extended Words that will be sent: {extended_words}")
+        print(f"Words that we captured in the OG Query: {set_oq}")
         return jsonify({
-            "success": True,
+            #"success": True,
             "related_words":extended_words
         })
     else:
-        return jsonify({
-            "success":False
-        })
+        return "Method not allowed", 405

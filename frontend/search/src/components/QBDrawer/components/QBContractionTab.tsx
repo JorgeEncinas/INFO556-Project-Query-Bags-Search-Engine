@@ -5,14 +5,16 @@ const QBContractionTab = ({ isDrawerVisible, setIsDrawerVisible } : {
     isDrawerVisible : boolean,
     setIsDrawerVisible : ( newValue : boolean) => void
 }) => {
+
     return (
         <div 
             id={"query-bags-contraction-component"}
-            className={"border border-b-emerald-500 flex items-center justify-start p-2"}
+            className={`${import.meta.env.VITE_BORDERS === "ON" ? "border border-emerald-500" : "" }  flex items-center justify-start p-2`}
         >
             <div
                 id={"query-bags-click-to-contract"}
-                className={" flex items-center justify-start p-2 cursor-pointer hover:text-gray-400"}
+                className={`
+                    flex items-center justify-start p-2 cursor-pointer hover:text-gray-400 `}
                 onClick={() => {
                     setIsDrawerVisible(!isDrawerVisible)
                 }}

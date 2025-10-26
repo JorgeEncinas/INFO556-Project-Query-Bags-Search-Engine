@@ -1,8 +1,8 @@
 import { useState } from "react"
 import type { Tag } from "react-tagcloud"
 import type { tagProps } from "../QBTagCloudWrapper/hooks/useTransformIntoTags"
-import QBTagCloseButton from "./QBTagCloseButton"
-import QBTagWordDisplay from "./QBTagWordDisplay"
+import QBTagCloseButton from "./components/QBTagCloseButton"
+import QBTagWordDisplay from "./components/QBTagWordDisplay"
 
 const QBTagCustomRenderer = ({tag} : {tag : Tag}) => { //From the library example in https://madox2.github.io/react-tagcloud/
 
@@ -12,7 +12,8 @@ const QBTagCustomRenderer = ({tag} : {tag : Tag}) => { //From the library exampl
         return (
             <div
                 //key={tag.key} //term
-                className={"flaX flaY px-1 py-1 h-[40px] border border-red-600"}
+                className={` ${import.meta.env.VITE_BORDERS === "ON" ? "border border-red-600" : ""} 
+                    flaX flaY px-1 py-1 h-[35px] `}
                 style={{
                     animationDelay: `${Math.random() * 2}s`
                 }}

@@ -1,26 +1,29 @@
 import { useSearchStore } from "../../../../store/searchStore"
 import type { queryBagTypes } from "../../../../types/queryBagTypes"
 
-const QBWordInputs = ({ bagType, wordInput, weightInput, isInputVisible, setQueryBagTextInput, setQueryBagWeightInput} : {
+const QBWordInputs = ({ bagType, wordInput, weightInput, isInputVisible, disabled, setQueryBagTextInput, setQueryBagWeightInput} : {
     bagType: queryBagTypes,
     wordInput : string,
     weightInput : string,
     isInputVisible : boolean,
+    disabled: boolean,
     setQueryBagTextInput: (text : string, bagType : queryBagTypes) => void,
     setQueryBagWeightInput: (text : string, bagType : queryBagTypes) => void,
 }) => {
 
     const addUpdateConstraintWords = useSearchStore((state) => state.queryBagSlice.addUpdateConstraintWords)
-
+    
     if(bagType !== "related") {
         return(
-           <div className={"relative border-blue-950 border w-[100%]"}>
+           <div className={`${import.meta.env.VITE_BORDERS === "ON" ? "border-blue-950 border" : ""} relative w-[100%]`}>
             <div
-                className={`${isInputVisible ? "" : "hidden"} top-[35px] absolute flex justify-center items-center w-[100%] border border-amber-300 z-[11] shadow-lg  py-1 h-7`}
+                className={`${isInputVisible ? "" : "hidden"} 
+                ${import.meta.env.VITE_BORDERS === "ON" ? "border border-amber-300" : ""}
+                top-[20px] absolute flex justify-center items-center w-[100%] z-[11] py-1 h-7`}
             >
                 <input
                     type="text"
-                    className={`w-[60%] bg-white text-black p-1 outline-none rounded-lg`}
+                    className={` w-[60%] bg-white p-1 outline-none rounded-lg text-black`}
                     placeholder="Add a word..."
                     onChange={(e) => {
                         setQueryBagTextInput(e.target.value, bagType)
@@ -46,13 +49,18 @@ const QBWordInputs = ({ bagType, wordInput, weightInput, isInputVisible, setQuer
     }
 
     return (
-        <div className={"relative border-blue-950 border w-[100%]"}>
+        <div className={`
+            ${import.meta.env.VITE_BORDERS === "ON" ? "border-blue-950 border" : ""} 
+            relative w-[100%]`}>
             <div
-                className={`${isInputVisible ? "" : "hidden"} top-[35px] absolute flex justify-center items-center w-[100%] border border-amber-300 z-[11] shadow-lg  py-1 h-7`}
+                className={`${isInputVisible ? "" : "hidden"}
+                ${import.meta.env.VITE_BORDERS === "ON" ? "border border-amber-300" : ""}
+                top-[20px] absolute flex justify-center items-center w-[100%]  z-[11] shadow-lg py-1 h-7`}
             >
                 <input
                     type="text"
-                    className={`w-[40%] bg-white text-black p-1 border-r-gray-400 border outline-none rounded-l-lg`}
+                    className={`${disabled ? "text-gray-500" : "text-black"} 
+                        border-r-gray-400 border w-[40%] bg-white text-black p-1 outline-none rounded-l-lg`}
                     placeholder="Add a word..."
                     onChange={(e) => {
                         setQueryBagTextInput(e.target.value, bagType)
@@ -69,6 +77,7 @@ const QBWordInputs = ({ bagType, wordInput, weightInput, isInputVisible, setQuer
                             )
                         }
                     }}
+                    disabled={disabled}
                 />
                 <input
                     type="text"

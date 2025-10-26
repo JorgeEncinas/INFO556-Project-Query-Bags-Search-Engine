@@ -1,7 +1,7 @@
 import type { Tag } from "react-tagcloud"
-import WhiteCloseSvg from "../../../../assets/WhiteCloseSvg"
-import { useSearchStore } from "../../../../store/searchStore"
-import type { tagProps } from "../QBTagCloudWrapper/hooks/useTransformIntoTags"
+import WhiteCloseSvg from "../../../../../assets/WhiteCloseSvg"
+import { useSearchStore } from "../../../../../store/searchStore"
+import type { tagProps } from "../../QBTagCloudWrapper/hooks/useTransformIntoTags"
 
 const QBTagCloseButton = ({ tag, tagProps, isXVisible } : {
     tag : Tag,

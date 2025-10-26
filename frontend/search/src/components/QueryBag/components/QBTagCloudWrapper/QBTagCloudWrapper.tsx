@@ -1,5 +1,5 @@
 import type { queryBagTypes } from "../../../../types/queryBagTypes"
-import QBTagCloud from "./QBTagCloud"
+import QBTagCloud from "./components/QBTagCloud"
 import type { QueryBagSliceType } from "../../../../store/slices/queryBagSlice"
 import { useSearchStore } from "../../../../store/searchStore"
 
@@ -15,7 +15,8 @@ const QBTagCloudWrapper = ({ bagType } : {bagType : queryBagTypes}) => {
     return (
         <div
             id={"query-bag-cloud"}
-            className={"h-[100%] w-[80%] border-b-fuchsia-700 border-4 flex flex-wrap justify-center items-center z-10"}
+            className={`${import.meta.env.VITE_BORDERS === "ON" ? "border-b-fuchsia-700 border" : ""}
+            h-[100%] w-[100%] -4 flex flex-wrap justify-center items-center z-10`}
         >
             {/* bagType === "related" ? queryTagComplexData : queryTagSetData */}
             <QBTagCloud
