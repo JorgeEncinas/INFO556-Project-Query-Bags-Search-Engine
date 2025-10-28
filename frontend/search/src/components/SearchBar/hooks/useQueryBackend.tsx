@@ -1,11 +1,23 @@
+/**
+ * @fileoverview Custom Hook containing the logic for doing all needed requests to the backend.
+ * There is only need for two queries: one to do a search, and another for getting suggested terms to
+ * place in the "Related Words" bag.
+ */
 import axios from "axios";
-import type { Results, Suggestions } from "../../../types/resultsTypes";
+import type { Results } from "../../../types/resultsTypes";
 import { useSearchStore } from "../../../store/searchStore";
-import type { relatedWordsBag, relatedWordsBagItems } from "../../../types/queryBagTypes";
+import type { relatedWordsBagItems } from "../../../types/queryBagTypes";
 import { useNavigate } from "react-router";
 
 /**
- * Return the function that will execute your search, and set the results
+ * This custom hook contains the logic for doing requests to the backend. There are two requests to do:
+ *  1) Send a query request. It uses the /search endpoint of the backend, and sets the results afterwards,
+ *     redirecting to the /results page in the frontend.
+ *  2) Send a request for suggestions of related terms. It uses the /related endpoint of the backend.
+ *     It then adds those terms to the "Related Words" bag grayed-out, as suggestions.
+ * 
+ * @returns a function that sends a request for a search to the backend, and a function that gets suggestions
+ * on your current query.
  */
 const useQueryBackend = () => {
 
@@ -21,6 +33,14 @@ const useQueryBackend = () => {
 
     const setResults = useSearchStore((state) => state.resultsSlice.setResults)
 
+    /**
+     * Calls the /search API endpoint in the backend, sending the query.
+     * Only does so if the query text is not empty. Then it sets the results and changes
+     * the route in the frontend to /results, which changes the displayed component
+     * to the Results Page.
+     * 
+     * @returns nothing.
+     */
     const getQueryResults = async () => {
         if (query === "") return
 
@@ -61,6 +81,14 @@ const useQueryBackend = () => {
         navigate("/results")
     }
 
+    /**
+     * Receives the user's current query, which comes from a debounced input,
+     * and uses it to query the backend for related terms to suggest. It then
+     * adds these terms grayed-out as suggestions in the "Related Terms" query bag.
+     * 
+     * @param currentQuery - the user's currentQuery, straight from the search bar, not from the Zustand Store.
+     * @returns nothing.
+     */
     const getRelatedSuggestions = async (currentQuery : string) => {
         if(currentQuery === "") return
 

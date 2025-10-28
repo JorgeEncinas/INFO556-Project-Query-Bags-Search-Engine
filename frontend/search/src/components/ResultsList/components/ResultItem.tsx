@@ -1,3 +1,16 @@
+/**
+ * @fileoverview Component to render each of the results retrieved by the Search Engine.
+ */
+
+/**
+ * Component that renders one of the retrieved results from the backend when doing a query.
+ * It is a simple display of title, body, and url.
+ * 
+ * @param props.title - The title of the article
+ * @param props.body - The body of the article
+ * @param props.url - The URL of the article
+ * @returns {JSX.Element}
+ */
 const ResultItem = ({ title, body, url } : {
     title : string,
     body: string,

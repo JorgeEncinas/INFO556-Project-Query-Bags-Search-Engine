@@ -1,5 +1,13 @@
+/**
+ *  @fileoverview An SVG of a Magnifier Glass used to convey the idea of "Searching" in the Search Box.
+ */
 import { useSearchStore } from "../store/searchStore"
 
+/**
+ *  An SVG of a Magnifier Glass used in the Search Box to convey the idea of "searching" to the user.
+ *  It changes size according to the page displayed, to become smaller in the "results" page.
+ *  @returns {JSX.Element}
+ */
 const SearchMagnifierSvg = () => {
 
     const page = useSearchStore((state) => state.displayedPage)

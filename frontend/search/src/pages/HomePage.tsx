@@ -1,7 +1,16 @@
+/**
+ * @fileoverview This file defines the "Home" page and its layout. It includes the logo, the title of the page,
+ * the search bar, and the Query Bags drawer with all of its included components.
+ */
 import HomeTitle from "../components/HomeTitle/HomeTitle";
 import QBDrawer from "../components/QBDrawer/QBDrawer";
 import SearchBar from "../components/SearchBar/SearchBar";
 
+/**
+ * Component that defines the layout of the Home Page.
+ * 
+ * @returns {JSX.Element}
+ */
 const HomePage = () => {
     return (
         <div

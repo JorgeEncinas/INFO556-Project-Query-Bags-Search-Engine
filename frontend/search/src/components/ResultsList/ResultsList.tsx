@@ -1,15 +1,30 @@
+/**
+ * @fileoverview Component that displays the list of results similar to how Search Engines do it: as a
+ * scrollable list of items. Contains the logic from transforming data into components.
+ */
 import { useSearchStore } from "../../store/searchStore";
 import type { Results } from "../../types/resultsTypes";
 import ResultItem from "./components/ResultItem";
 
+/**
+ * Function that checks the specific type of an item, used to ensure TypeScript
+ * that we're dealing with the exact type of object it expects.
+ * 
+ * @param item - The list of results, or an empty object.
+ * @returns true if the object is of type "Results", false otherwise
+ */
 const isResultsType = (item : {} | Results): item is Results => {
     //From https://stackoverflow.com/a/40718205
     // and from https://www.typescriptlang.org/docs/handbook/advanced-types.html#user-defined-type-guards
-    //console.log(`${bagType} === related ??? ${bagType ==="related"}`)
     return item.hasOwnProperty("title")
 }
 
-
+/**
+ * Iterates over all the results from the query and transforms them into components to be rendered
+ * inside a scrollable list, similar to Google's and other search engines' design.
+ * 
+ * @returns {JSX.Element}
+ */
 const ResultsList = () => {
 
     const results = useSearchStore((state) => state.resultsSlice.results)

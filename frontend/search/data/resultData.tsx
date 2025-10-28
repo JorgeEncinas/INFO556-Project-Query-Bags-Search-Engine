@@ -1,3 +1,7 @@
+/**
+ * @fileoverview Placeholder data taken from the backend to have a reference of what results look like,
+ * and maybe use it, if needed, as dummy data to tweak the display of results.
+ */
 import type { Results } from "../src/types/resultsTypes"
 export const exampleResults : Results = {
     title: {

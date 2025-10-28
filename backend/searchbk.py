@@ -16,7 +16,7 @@ index = pt.IndexFactory.of("E:/code/ua/s2/info556/pyterrier_ui/backend/indices/m
 bm25 = pt.terrier.Retriever(index, wmodel="BM25")   # RETRIEVER
 bo1 = pt.rewrite.Bo1QueryExpansion(index)           # QUERY EXPANSION
 
-# One time search to have the docstore created
+# One time search to have the docstore created if necessary
 dataset = pt.get_dataset("irds:msmarco-document")   # DATASET FOR TEXT RETRIEVAL
 text_getter = pt.text.get_text(                     # TEXT RETRIEVER
     indexlike=dataset,
@@ -27,10 +27,54 @@ text_getter = pt.text.get_text(                     # TEXT RETRIEVER
 
 @app.route("/")
 def index():
+    """Home of the website, may be setup later to return the compiled React application.
+    """
     return "<p>Hello, World!</p>"
 
 @app.route("/search", methods=["POST"])
 def search():
+    """ Does a search using PyTerrier's BM25
+
+    ---
+    HTTP Method: POST
+    
+    Request Body:
+    json
+    {
+        "query": string,
+        "query_bags": {
+            "forbidden_words": Array<string>,
+            "must_have_words": Array<string>,
+            "related_words": {
+                "term": {
+                    "addedBy": string,
+                    "weight": number
+                },
+                ...
+            }
+        }
+    }
+
+    Returns:
+    A collection of results structured like so:
+    {
+        "title": {
+            0: "lorem ipsum...",
+            1: "lorem ipsum...".
+            ...
+        },
+        "body": {
+            0: "lorem ipsum...",
+            1: "lorem ipsum...".
+            ...
+        },
+        "url": {
+            0: "lorem ipsum...",
+            1: "lorem ipsum...".
+            ...
+        }
+    }
+    """
     print("Entered search endpoint?")
     print(request.method) 
     content = request.json #From  https://stackoverflow.com/a/35614301
@@ -107,6 +151,26 @@ def search():
 
 @app.route("/related", methods=["POST"])
 def get_related_terms():
+    """ Receives a query string and returns related terms from it
+        by performing a query expansion.
+
+    ---
+    HTTP Method: POST
+
+    Request Body:
+    {
+        "query": string
+    }
+
+    Returns:
+    A collection of suggested terms in the format:
+    {
+        related_words: [
+            (string, number),
+            ...
+        ]
+    }
+    """
     if request.method == "POST":
         # STEP 1: RECEIVE THE QUERY
         content = request.json

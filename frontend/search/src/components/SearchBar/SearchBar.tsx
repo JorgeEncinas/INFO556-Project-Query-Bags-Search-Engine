@@ -1,10 +1,19 @@
+/**
+ * @fileoverview Displays the search bar that the user will use as input field for their queries.
+ * Changes size depending on the page: it is bigger on the home page, smaller on the results page.
+ */
 import SearchMagnifierSvg from '../../assets/SearchMagnifierSvg'
 import { useSearchStore } from '../../store/searchStore'
 import { DebounceInput } from 'react-debounce-input'
 import useQueryBackend from './hooks/useQueryBackend'
 
+/**
+ * Renders the Search Bar: an input field where the user can write down their query.
+ * When they press enter, the query is applied. Changes size depending on the page.
+ * 
+ * @returns {JSX.Element}
+ */
 const SearchBar = () => {
-    //const [searchText, setSearchText] = useState<string>("") // Used https://www.joshwcomeau.com/react/data-binding/ as reminder
     const { displayedPage, query, setQuery } = useSearchStore((state) => state)
 
     const { getQueryResults, getRelatedSuggestions } = useQueryBackend()

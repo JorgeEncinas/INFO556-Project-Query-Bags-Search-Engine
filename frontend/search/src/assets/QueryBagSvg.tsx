@@ -1,5 +1,15 @@
+/**
+ * @fileoverview An SVG of a big, wide bag used to display the metaphor of the Query Bags
+ */
 import { useSearchStore } from "../store/searchStore"
 
+/**
+ *  An SVG rendering a big, wide bag that is hollow inside, used to display the metaphor
+ *  of the Query Bags. It changes size according to the displayed page, becoming smaller
+ *  for the "results" page.
+ * 
+ *  @returns {JSX.Element}
+ */
 const QueryBagSvg = () => {
 
     const page = useSearchStore((state) => state.displayedPage)

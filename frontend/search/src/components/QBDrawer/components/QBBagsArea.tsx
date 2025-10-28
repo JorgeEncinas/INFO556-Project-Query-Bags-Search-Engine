@@ -1,6 +1,16 @@
+/**
+ * @fileoverview Component that displays the inner part of the Query Bags drawer; that is, it defines the layout
+ * of the query bags, side by side.
+ */
 import { useSearchStore } from "../../../store/searchStore";
 import QueryBag from "../../QueryBag/QueryBag";
 
+/**
+ * This component is the overall container of the inner drawer, where the query bags are displayed.
+ * 
+ * @param props.isDrawerVisible - A boolean to define whether the drawer should be open (true) or closed (false)
+ * @returns {JSX.Element}
+ */
 const QBBagsArea = ({ isDrawerVisible } : {
     isDrawerVisible : boolean
 }) => {

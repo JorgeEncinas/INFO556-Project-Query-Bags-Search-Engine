@@ -2,5 +2,8 @@
 .\venv\Scripts\activate
 py -m flask --app searchbk run
 
-//To run the frontend
+//To run the Front-End
 pnpm run dev
+
+//To run tailwindCSS and get hot reloading
+pnpm dlx @tailwindcss/cli -i ./src/index.css -o ./dist/output.css --watch

@@ -7,3 +7,6 @@ backup_indices/
 deprecated.py
 *.log
 __pycache__/
+failed_indices_last_done_25_october_at_night/
+not_good_indices/
+10_indices/

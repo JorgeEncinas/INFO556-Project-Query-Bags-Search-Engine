@@ -1,3 +1,12 @@
+/**
+ *  @fileoverview An SVG of a white, small, X mark to indicate deletion of an item.
+ */
+
+/**
+ *  An SVG of a white X mark to indicate "deletion" of an item. Used to display over words
+ *  so that a user may delete a term.
+ *  @returns {JSX.Element}
+ */
 const WhiteCloseSvg = () => {
     return (
         <svg width="11" height="11" viewBox="0 0 11 11" fill="none" xmlns="http://www.w3.org/2000/svg">

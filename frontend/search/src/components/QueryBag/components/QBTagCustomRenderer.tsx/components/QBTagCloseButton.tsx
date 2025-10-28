@@ -1,8 +1,22 @@
+/**
+ * @fileoverview This file contains a component for the Close Button on the Words displayed
+ * on each Tag Cloud. The element appears when you hover the pointer over a word.
+ */
 import type { Tag } from "react-tagcloud"
 import WhiteCloseSvg from "../../../../../assets/WhiteCloseSvg"
 import { useSearchStore } from "../../../../../store/searchStore"
 import type { tagProps } from "../../QBTagCloudWrapper/hooks/useTransformIntoTags"
 
+/**
+ * Renders a button with an X that serves to delete a word from a query bag when the button is clicked.
+ * It is rendered inside the TagCloud, so it must handle the types that TagCloud defines, namely "Tag".
+ * 
+ * @param props.tag - A word, of type "Tag", which is defined by the TagCloud library.
+ * @param props.tagProps - the tag's props, which contain properties beyond what's specified in the "Tag"
+ * type.
+ * @param props.isXVisible - Whether the element (an X) should be displayed.
+ * @returns {JSX.Element}
+ */
 const QBTagCloseButton = ({ tag, tagProps, isXVisible } : {
     tag : Tag,
     tagProps : tagProps

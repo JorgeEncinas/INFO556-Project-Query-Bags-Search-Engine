@@ -1,5 +1,6 @@
 @import "tailwindcss";
 
+/* From the default vite template */
 :root {
   font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
@@ -14,6 +15,7 @@
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
+/* End of default vite template. */
 
 .mustHave1 {
   color: #42D923;
@@ -94,7 +96,7 @@ html, body, #root {
   }
 }
 
-
+/* From the default template created by Vite */
 @media (prefers-color-scheme: light) {
   :root {
     color: #213547;

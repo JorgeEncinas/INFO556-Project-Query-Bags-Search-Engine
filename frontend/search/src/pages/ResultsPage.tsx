@@ -1,11 +1,21 @@
+/**
+ * @fileoverview This component specifies the Results page, where the results from a search are displayed.
+ * It contains the logo and title, smaller and next to the search bar, which has also been reduced in size.
+ * The Query Bags drawer is included, diminished in size. Below these elements, the results are displayed as
+ * a scrollable list.
+ */
 import HomeTitle from "../components/HomeTitle/HomeTitle";
 import QBDrawer from "../components/QBDrawer/QBDrawer";
 import ResultsList from "../components/ResultsList/ResultsList";
 import SearchBar from "../components/SearchBar/SearchBar";
 
+/**
+ * Component that defines the layout of the Results page, where all results from a search
+ * are displayed.
+ * 
+ * @returns {JSX.Element}
+ */
 const ResultsPage = () => {
-
-
 
     return (
         <div

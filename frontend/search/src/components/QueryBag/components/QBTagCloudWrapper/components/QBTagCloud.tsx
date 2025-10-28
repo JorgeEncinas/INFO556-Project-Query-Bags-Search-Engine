@@ -1,34 +1,48 @@
+/**
+ * @fileoverview This component is the inner component of the Query Bag TagCloud.
+ * A Tag Cloud or Word Cloud is the chosen visual display for the query constraints and reformulations
+ * the user will pile on top of their query. This component sets up the data rendering for the tags and
+ * calls the TagCloud library.
+ */
 import { TagCloud } from "react-tagcloud"
 import type { queryBagTypes, relatedWordsBag } from "../../../../../types/queryBagTypes"
 import useTransformIntoTags from "../hooks/useTransformIntoTags"
-// ts-ignore from https://stackoverflow.com/a/54571297
-// I added it because it seems like the library does not have type implementations
 
+/**
+ * This constant is used to vary the size of the words displayed in the query bags.
+ */
 export const tagScalingFactor = 0.8
+/**
+ * This constant is to choose the minimum value which must be specified for the TagCloud library
+ * I am not sure exactly of what it does, so I just set it to a reasonable min considering
+ * the range of values I decided for the weights
+ */
 export const minTagSize = 0.5*tagScalingFactor
+/**
+ * This constant defines the maximum value, a parameter that must be specified for the TagCloud library.
+ * I am not exactly sure of what it does, so I just set it to a reasonable max, considering
+ * the range of values I decided for the weights.
+ */
 export const maxTagSize = 3*tagScalingFactor
 
 export type tagPropsType = {
     addedBy : "user"|"system"|null
 }
 
+/**
+ * Component that renders the TagCloud component (from the react-tagcloud library), setting up
+ * the elements that it needs. This is the inner element of the QBTagCloudWrapper.
+ * 
+ * @param props.terms - The terms which must be rendered in this specific TagCloud
+ * @param props.bagType -  The bagType that all of these terms belong to. Used for the logic (contained in the hook)
+ * @returns {JSX.Element}
+ */
 const QBTagCloud = ({ terms, bagType } : {
     terms : relatedWordsBag | Set<string>,
     bagType: queryBagTypes
 }) => {
-    //I think the terms received here can be specified as either of three types
-    //  the "Forbidden" and "Must-Have" words all have the same weight (1)
-    // While the "Related" words DO have different weights AND might even have a different color
-    // That logic goes here! I think it's where it makes most sense
-    //  So "related" have "addedBy" and "weight"
 
-    // Tags need two values, though not necessarily, from what I am seeing
-    //  1) value
-    //  2) count
-
-    const { list_of_tags, customRenderer } = useTransformIntoTags({ terms, bagType })
-    //console.log(terms)
-    //console.log(list_of_tags)
+    const { list_of_tags, customRenderer } = useTransformIntoTags({ terms, bagType })    
 
     return (
         <TagCloud

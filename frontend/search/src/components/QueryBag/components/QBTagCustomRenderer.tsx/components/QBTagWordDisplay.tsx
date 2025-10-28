@@ -1,17 +1,34 @@
+/**
+ * @fileoverview This component is the component for displaying a word in a TagCloud.
+ * It contains logic for displaying it and for what should happen when you click on the word,
+ * which is to add it or prepare it for modification of its weight value.
+ */
 import type { Tag } from "react-tagcloud"
 import type { tagProps } from "../../QBTagCloudWrapper/hooks/useTransformIntoTags"
 import { useSearchStore } from "../../../../../store/searchStore"
 
+/**
+ * This component is used to render each word in the TagCloud component. It is used for replacing
+ * the default word rendering the "react-tagcloud" library provides. It also prepares the callbacks
+ * that are called when you click on the word.
+ * 
+ * @param props.tag - The tag element that the TagCloud component will pass to this component to render
+ * @param props.tagProps - the tagProps, which contains the additional data of the word that doesn't fit
+ * the pre-defined properties of the "Tag" type.
+ * @returns {JSX.Element}
+ */
 const QBTagWordDisplay = ({ tag, tagProps } : {
     tag : Tag,
     tagProps : tagProps
 }) => {
 
     const page = useSearchStore((state) => state.displayedPage)
-    const setQueryBagTextInput = useSearchStore((state) => state.queryBagSlice.setQueryBagTextInput)
-    const setQueryBagWeightInput = useSearchStore((state) => state.queryBagSlice.setQueryBagWeightInput)
-    const addUpdateConstraintWords = useSearchStore((state) => state.queryBagSlice.addUpdateConstraintWords)
-    const setDisableRelatedWordsTextInput = useSearchStore((state) => state.queryBagSlice.setDisableRelatedWordsTextInput)
+    const { 
+        setQueryBagTextInput,
+        setQueryBagWeightInput,
+        addUpdateConstraintWords,
+        setDisableRelatedWordsTextInput 
+    } = useSearchStore((state) => state.queryBagSlice)
 
     return (
         <span
@@ -31,7 +48,8 @@ const QBTagWordDisplay = ({ tag, tagProps } : {
                         setDisableRelatedWordsTextInput(true)
                         setQueryBagWeightInput(String(tagProps.weight)) //, tagProps.bagType
                     } else {
-                        addUpdateConstraintWords(tag.value, `${tag.count}`, tagProps.bagType, "system")
+                        //console.log(`${tag.value} clicked to add --> ${tagProps.weight}`)
+                        addUpdateConstraintWords(tag.value, `${tagProps.weight+0.01}`, tagProps.bagType, "system")
                     } 
                 }
             }}

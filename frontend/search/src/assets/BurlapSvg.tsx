@@ -1,3 +1,11 @@
+/**
+ * @fileoverview One-size Burlap Sack SVG Component used to render the logo of the website within the page.
+ */
+
+/**
+ *  An SVG of a burlap sack used as the logo of the website.
+ *  @returns {JSX.Element}
+ */
 const BurlapSvg = () => {
     return(
         <svg width="48" height="48" viewBox="0 0 116 116" fill="none" xmlns="http://www.w3.org/2000/svg">

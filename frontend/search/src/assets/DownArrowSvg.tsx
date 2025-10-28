@@ -1,3 +1,15 @@
+/**
+ *  @fileoverview An SVG of an arrow pointing down used for the display of the Query Bags drawer,
+ *  specifically for indicating to users that there is a drawer, and its current state (open or closed).
+ */
+
+
+/**
+ *  An SVG of an arrow pointing down that is oriented (i.e. rotated) according to shouldPointDown  
+ * 
+ *  @param {boolean} props.shouldPointDown - Whether the arrow points up (when open) or down (when the drawer is closed).
+ *  @returns {JSX.Element} 
+ */
 const DownArrowSvg = ({shouldPointDown} : { shouldPointDown : boolean}) => {
     return (
         <svg

@@ -1,6 +1,27 @@
+/**
+ * @fileoverview This file defines the Input Fields that go over each Query Bag. The logic
+ * varies slightly for the "Related Words" bag, since it has a "weight" property that can be adjusted.
+ */
 import { useSearchStore } from "../../../../store/searchStore"
 import type { queryBagTypes } from "../../../../types/queryBagTypes"
 
+/**
+ * This component renders an Input Field over the Query Bag that it is contained within.
+ * The Input Field is different for the "Related Words" query bag, where we must include a field for the Weight property.
+ * 
+ * @param props.bagType - The type of Query Bag that this input field is contained within. Used to
+ * know where to direct new terms that are added to this field, and to know if we should render the "weight" input.
+ * @param props.wordInput - The Zustand Store saves a variable that contains the current string the user has written 
+ * into the input field. It is this property; there is one per each Query Bag.
+ * @param props.weightInput - The Zustand Store saves a variable that contains the current string the user has written
+ * into the weight field (in the case of the "Related Words" query bag). It is this property.
+ * @param props.isInputVisible - Whether the input field should be visible. Changes to "true" when the cursor is over the
+ * query bag.
+ * @param props.setQueryBagTextInput - Callback to modify the current Query Bag's text input. Comes from the Zustand Store.
+ * @param props.setQueryBagWeightInput - Callback to modify the current Query Bag's weight input, meant to be used
+ * exclusively in the "Related Words" query bag. Comes from the Zustand Store.
+ * @returns {JSX.Element}
+ */
 const QBWordInputs = ({ bagType, wordInput, weightInput, isInputVisible, disabled, setQueryBagTextInput, setQueryBagWeightInput} : {
     bagType: queryBagTypes,
     wordInput : string,
@@ -55,7 +76,7 @@ const QBWordInputs = ({ bagType, wordInput, weightInput, isInputVisible, disable
             <div
                 className={`${isInputVisible ? "" : "hidden"}
                 ${import.meta.env.VITE_BORDERS === "ON" ? "border border-amber-300" : ""}
-                top-[20px] absolute flex justify-center items-center w-[100%]  z-[11] shadow-lg py-1 h-7`}
+                top-[20px] absolute flex justify-center items-center w-[100%]  z-[11] py-1 h-7`}
             >
                 <input
                     type="text"
@@ -68,7 +89,6 @@ const QBWordInputs = ({ bagType, wordInput, weightInput, isInputVisible, disable
                     value={wordInput}
                     onKeyDown={(e) => {
                         if(e.key === "Enter") {
-
                             addUpdateConstraintWords(
                                 wordInput,
                                 weightInput=weightInput,

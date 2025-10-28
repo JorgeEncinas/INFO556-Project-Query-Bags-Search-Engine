@@ -1,3 +1,13 @@
+/**
+ *  @fileoverview A small, white, reusable SVG of a trash can used to convey the idea of deleting a set of items.
+ */
+
+
+/**
+ *  An SVG of a trash can used to convey the idea of deleting, or emptying-out a set of items,
+ *  particularly in the Query Bags.
+ *  @returns {JSX.Element}
+ */
 const TrashCanSvg = () => {
     return (
         <svg width="19" height="19" viewBox="0 0 21 21" fill="none" xmlns="http://www.w3.org/2000/svg">

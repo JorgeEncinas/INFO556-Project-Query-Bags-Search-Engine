@@ -1,3 +1,8 @@
+/**
+ * @fileoverview Details the "Query Bag" Slice of the store, which contains all
+ * variables that are maintained as the state of our query bags, such as the values of input fields,
+ * the terms stored in each query bag, and the logic to modify these properties.
+ */
 import type { StateCreator } from "zustand"
 import type { queryBagTypes, relatedWordsBag, relatedWordsBagItems } from "../../types/queryBagTypes"
 import type { SearchStoreType } from "../../store/searchStore"
@@ -9,36 +14,111 @@ export const captureNumbers = new RegExp( //Followed this tutorial to help me wi
     "[0-9]+\.?([0-9]+)?"
 )
 
+/**
+ * Type definition of the Query Bag Slice.
+ * 
+ */
 export type QueryBagSliceType = {
-    related_words_text_input: string,
-    related_words_weight_input: string,
-    forbidden_words_text_input: string,
-    //forbidden_words_weight_input: string,
-    must_have_words_text_input: string,
-    //must_have_words_weight_input: string,
-    disableRelatedWordsTextInput: boolean,
-    setDisableRelatedWordsTextInput: (newValue : boolean) => void,
-    setQueryBagTextInput: ( text : string, bagType: queryBagTypes) => void,
-    setQueryBagWeightInput: ( weight : string ) => void,
-    deleteRelatedWords : () => void,
+    /** The items in the "Related Words" query bag */
     related_words: relatedWordsBag,
+    /** The items in the "Forbidden Words" query bag */
     forbidden_words: Set<string>,
+    /** The items in the "Must-Have Words" query bag */
     must_have_words: Set<string>,
+    /** The text input field for a term in the "Related Words" query bag */
+    related_words_text_input: string,
+    /** The text input field for the weight in the "Related Words" query bag */
+    related_words_weight_input: string,
+    /** The text input field for a term in the "Forbidden Words" query bag */
+    forbidden_words_text_input: string,
+    /** The text input field for a term in the "Must-Have Words" query bag */
+    must_have_words_text_input: string,
+    /** Boolean that defines if the "Related Words" input field should be disabled
+     *  Used whenever the user wants to update the weight of an already-added term.
+     */
+    disableRelatedWordsTextInput: boolean,
+    /**
+     *  Changes whether the "Related Words" term input should be disabled or not.
+     *  It is disabled when the user is updating the weight of an existing term.
+     *  If the user's cursor leaves the Query Bag, it is enabled again.
+     * @param newValue - The new value of the boolean variable.
+     * @returns nothing.
+     */
+    setDisableRelatedWordsTextInput: (newValue : boolean) => void,
+    /**
+     * Sets the value of the "Term" field input of the specified Query Bag.
+     * 
+     * @param text - The text that we should set in the "Term" input field
+     * @param bagType - the Query Bag where we should apply this change.
+     * @returns nothing.
+     */
+    setQueryBagTextInput: ( text : string, bagType: queryBagTypes) => void,
+    /**
+     * Sets the value of the "weight" input field in the "Related Words" query bag.
+     * 
+     * @param weight - the new weight to set in the input, may be an empty string
+     * @returns nothing.
+     */
+    setQueryBagWeightInput: ( weight : string ) => void,
+    /**
+     * Deletes all words in the "Related Words" field that remain as suggestions. That is,
+     * all pulsating, grayed-out words. Done so the system can insert new grayed-out pulsating words.
+     * 
+     * @returns nothing
+     */
+    deleteRelatedWords : () => void,
+    /**
+     * Adds or Updates a Query Bag's collection of items.
+     * 
+     * @param textInput - The value of the text input that will be added to the existing collection
+     * @param weightInput - The weight value for the new term.
+     * @param bagType - The query bag that this term should be added to.
+     * @param addedBy - Who is responsible for suggesting this term, in the case of the "Related Words" query bag
+     * @returns nothing.
+     */
     addUpdateConstraintWords : (textInput : string, weightInput: string, bagType: queryBagTypes, addedBy:"user"|"system") => void,
+    /**
+     * Takes the terms from a query to the backend for suggestions, and adds them,
+     * being careful of not overwriting terms that already exist in the "Related Terms" query bag.
+     * 
+     * @param terms - the suggested terms to be added as pulsating, grayed-out terms
+     * @returns nothing.
+     */
     addSuggestedRelatedWords : (terms : SuggestedTerm[]) => void,
+    /**
+     * Deletes all terms in all query bags.
+     * 
+     * @returns nothing
+     */
+    deleteAllConstraintWords : () => void,
+    /**
+     * Deletes terms from a specific query bag.
+     * 
+     * @param words_to_delete - the terms that should be deleted, or "all" if it should delete all terms
+     * @param constraintType - The query bag that it should apply the deletion to.
+     * @returns nothing.
+     */
     deleteConstraintWords: (words_to_delete : Set<string> | "all", constraintType: queryBagTypes) => void
 }
 
 // Guidance on slice type definition from https://zustand.docs.pmnd.rs/guides/typescript
 // One key part is the "create without curried workaround" section, to pass in the arguments
 // ["zustand/devtools", never]
+
+/**
+ * "Query Bag" Slice for maintaining the client state regarding the query bag components. 
+ * 
+ * @param set - Zustand's needed "set" property for modifying the current state of the store.
+ * @returns A slice of the Zustand store, specifically, the "Query Bag" slice.
+ */
 export const createQueryBagSlice : StateCreator<SearchStoreType, [], [], QueryBagSliceType> = (set) => ({
+    related_words: {}, //queryTagComplexData,//{},
+    forbidden_words: new Set<string>(), //new Set<string>(queryTagSetData),
+    must_have_words: new Set<string>(), //new Set<string>(queryTagSetData2),
     related_words_text_input: "",
     related_words_weight_input: "",
     forbidden_words_text_input: "",
-    //forbidden_words_weight_input: "",
     must_have_words_text_input: "",
-    //must_have_words_weight_input: "",
     disableRelatedWordsTextInput: false,
     setDisableRelatedWordsTextInput: (newValue : boolean) => {
         set((state) => {
@@ -130,9 +210,6 @@ export const createQueryBagSlice : StateCreator<SearchStoreType, [], [], QueryBa
             
         })
     },
-    related_words: {},//queryTagComplexData,//{},
-    forbidden_words: new Set<string>(),//new Set<string>(queryTagSetData),
-    must_have_words: new Set<string>(),//new Set<string>(queryTagSetData2),
     addSuggestedRelatedWords : (terms : SuggestedTerm[]) => {
         set((state) => {
 
@@ -163,7 +240,7 @@ export const createQueryBagSlice : StateCreator<SearchStoreType, [], [], QueryBa
                 if(!(term in related_terms)) {
                     related_terms[term] = {
                         addedBy: "system",
-                        weight: Math.min(Math.max(weight, 0.9), 1.0),
+                        weight: Math.min(Math.max(weight, 0.6), 1.0),
                         added: false
                     }
                 }
@@ -179,11 +256,10 @@ export const createQueryBagSlice : StateCreator<SearchStoreType, [], [], QueryBa
         })
     },
     addUpdateConstraintWords : (textInput : string, weightInput: string, bagType: queryBagTypes, addedBy:"user"|"system") => {
-        //Check that no fields are empty
+        // Check that no fields are empty
         if (textInput === "" || weightInput === "") {
             return
         }
-        // Check that the weightInput can be registered as a number!
         let newWeight = Number(weightInput)
         if(bagType === "related" && isNaN(newWeight)) { //Otherwise we don't really care about the weight!
             return
@@ -206,11 +282,13 @@ export const createQueryBagSlice : StateCreator<SearchStoreType, [], [], QueryBa
                         forbidden_words: new Set<string>([...state.queryBagSlice.forbidden_words, textInput]) // From https://stackoverflow.com/a/55603608
                     }
                 }
-            } else { //related
+            } else { // Related
                 return {
                     ...state,
                     queryBagSlice: {
                         ...state.queryBagSlice,
+                        related_words_text_input: "",
+                        related_words_weight_input: "",
                         related_words: {
                             ...state.queryBagSlice.related_words,
                             [textInput]: {
@@ -224,6 +302,19 @@ export const createQueryBagSlice : StateCreator<SearchStoreType, [], [], QueryBa
             }
             
         })
+    },
+    deleteAllConstraintWords : () => {
+      set((state) => {
+        return {
+            ...state,
+            queryBagSlice: {
+                ...state.queryBagSlice,
+                related_words: {},
+                must_have_words: new Set<string>(),
+                forbidden_words: new Set<string>()
+            }
+        }
+      })  
     },
     deleteConstraintWords: (words_to_delete : Set<string> | "all", constraintType: queryBagTypes) => set((state) => {
         if (constraintType === "forbidden") {

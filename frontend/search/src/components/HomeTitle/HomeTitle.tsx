@@ -1,7 +1,19 @@
+/**
+ * @fileoverview A component that displays the website's logo and title, changing size depending on
+ * the page displayed, "home" or "results". It displays the logo, which is a burlap sack, to the left,
+ * and to the right of it, the name "BagSearch".
+ */
 import { useNavigate } from "react-router";
 import BurlapSvg from "../../assets/BurlapSvg"
 import { useSearchStore } from "../../store/searchStore";
 
+/**
+ * A component that displays the title of the website alongside the logo, a burlap sack, to the left.
+ * This element functions as a button that can be clicked to go back to the home page. When the user is on the
+ * results page, this action clears all suggestions of words, and sets the query to an empty string.
+ * Added terms to the query bags remain untouched, however.
+ * @returns {JSX.Element}
+ */
 const HomeTitle = () => {
 
     const page = useSearchStore((state) => state.displayedPage)
