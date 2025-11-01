@@ -1,10 +1,13 @@
-from flask import Flask, jsonify, request
+from flask import Flask, jsonify, request, send_from_directory
 from flask_cors import CORS
 import pyterrier as pt
 from pathlib import Path
 import re
 
-app = Flask(__name__)
+app = Flask(
+    __name__,
+    static_folder="static"
+)
 CORS(app) #From https://pypi.org/project/flask-cors/
 
 # SECTION: PYTERRIER INITIALIZATION -----------------------------------------------------------------------------------
@@ -27,9 +30,10 @@ text_getter = pt.text.get_text(                     # TEXT RETRIEVER
 
 @app.route("/")
 def index():
-    """Home of the website, may be setup later to return the compiled React application.
+    """Home of the website, setup to return the compiled React application.
     """
-    return "<p>Hello, World!</p>"
+    #From https://stackoverflow.com/a/57648079
+    return send_from_directory(app.static_folder, "index.html")
 
 @app.route("/search", methods=["POST"])
 def search():
