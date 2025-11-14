@@ -14,3 +14,5 @@ frontend/search/*.js
 frontend/search/src/**/*.js
 
 .env*
+static_old/
+README_files/
