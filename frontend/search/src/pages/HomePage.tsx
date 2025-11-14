@@ -17,13 +17,13 @@ const HomePage = () => {
             id={"main-div"}
             className={`
                 ${import.meta.env.VITE_BORDERS === "ON" ? "border border-green-400" : ""}
-                h-[100%] w-[100%]  flex flex-col justify-start items-center`}
+                h-[100%] w-[100%]  flex flex-col justify-center items-center`}
         >
             <div
                 id={"search-bar-div"}
                 className={`
                     ${import.meta.env.VITE_BORDERS === "ON" ? "border border-blue-400" : ""}
-                    flex items-center justify-center  h-[30%] w-[100%]`}
+                    flex items-center justify-center  h-[40%] w-[100%]`}
             >
                 <div className={`
                     ${import.meta.env.VITE_BORDERS === "ON" ? "border border-red-400" : ""}

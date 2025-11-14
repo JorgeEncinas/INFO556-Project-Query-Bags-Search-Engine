@@ -15,7 +15,8 @@ import QBSummaryButton from "./QBSummaryButton"
  * @returns {JSX.Element}
  */
 const QBSummary = () => {
-    const related_words_count = Object.keys(useSearchStore((state) => state.queryBagSlice.related_words)).length
+
+    const related_words_count = useSearchStore((state) => state.queryBagSlice.related_words_count)
     const forbidden_words_count = useSearchStore((state) => state.queryBagSlice.forbidden_words).size
     const must_have_words_count = useSearchStore((state) => state.queryBagSlice.must_have_words).size
 

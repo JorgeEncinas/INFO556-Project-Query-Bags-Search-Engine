@@ -24,11 +24,13 @@ const QBTagCloudWrapper = ({ bagType } : {bagType : queryBagTypes}) => {
             ? qbslice.forbidden_words
             : qbslice.related_words
 
+    const page = useSearchStore((state) => state.displayedPage)
+
     return (
         <div
             id={"query-bag-cloud"}
             className={`${import.meta.env.VITE_BORDERS === "ON" ? "border-b-fuchsia-700 border" : ""}
-            h-[100%] w-[100%] -4 flex flex-wrap justify-center items-center z-10`}
+            ${ page === "home" ? "h-[230px] w-[350px]" : "h-[210px] w-[250px]" } flex flex-col justify-start items-center z-10`}
         >
             <QBTagCloud
                 terms={dataTruth} 

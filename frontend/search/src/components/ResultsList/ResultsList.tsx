@@ -60,7 +60,7 @@ const ResultsList = () => {
 
     return (
         <div
-            className={`flex flex-col w-[100%] h-[100%] justify-center items-start`}
+            className={`flex flex-col w-[100%] h-[100%] justify-center items-center`}
         >
             {
                 resultComponents

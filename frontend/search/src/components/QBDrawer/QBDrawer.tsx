@@ -29,7 +29,7 @@ const QBDrawer = () => {
         <div
             id={"query-bags-overall-component"}
             className={`${import.meta.env.VITE_BORDERS === "ON" ? "border border-cyan-200" : "" }  ${isDrawerVisible ? "" : "max-h-[1px]"} 
-                ${displayedPage === "results" ? "h-[370px]" : "h-[70%]"}
+                ${displayedPage === "results" ? "h-[370px]" : "h-[450px]"}
                 w-[100%] mb-3 pb-4 `}
         >
             <QBContractionTab

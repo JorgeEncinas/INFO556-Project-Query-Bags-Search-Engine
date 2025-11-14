@@ -48,7 +48,7 @@ const QBTagCloud = ({ terms, bagType } : {
         <TagCloud
             tags={list_of_tags}
             className={`${import.meta.env.VITE_BORDERS === "ON" ? "border border-rose-400" : ""} 
-                h-[70%] w-[50%] pt-1  flex justify-around flex-wrap translate-y-8 overflow-y-scroll`}
+                h-[71%] w-[57%] pt-1 mt-4 flex justify-around flex-wrap translate-y-8 overflow-y-scroll`}
             shuffle={false}
             minSize={minTagSize}
             maxSize={maxTagSize} //Get the max!

@@ -26,11 +26,11 @@ const ResultsPage = () => {
         >
             <div
                 id={"search-bar-area"}
-                className={"flex justify-start items-center w-[100%] px-2 py-1"}
+                className={"flex justify-start items-center w-[100%] px-2 ml-2 py-1"}
             >
                 <HomeTitle />
                 <div
-                    className={"pl-3 w-[100%]"}
+                    className={"ml-3 mt-1 w-[100%]"}
                 >
                     <SearchBar />
                 </div>

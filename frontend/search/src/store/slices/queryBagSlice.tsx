@@ -25,6 +25,8 @@ export type QueryBagSliceType = {
     forbidden_words: Set<string>,
     /** The items in the "Must-Have Words" query bag */
     must_have_words: Set<string>,
+    /** The number of words actually added into the Related Words bag (ignores suggestions) */
+    related_words_count : number,
     /** The text input field for a term in the "Related Words" query bag */
     related_words_text_input: string,
     /** The text input field for the weight in the "Related Words" query bag */
@@ -115,6 +117,7 @@ export const createQueryBagSlice : StateCreator<SearchStoreType, [], [], QueryBa
     related_words: {}, //queryTagComplexData,//{},
     forbidden_words: new Set<string>(), //new Set<string>(queryTagSetData),
     must_have_words: new Set<string>(), //new Set<string>(queryTagSetData2),
+    related_words_count : 0,
     related_words_text_input: "",
     related_words_weight_input: "",
     forbidden_words_text_input: "",
@@ -283,20 +286,32 @@ export const createQueryBagSlice : StateCreator<SearchStoreType, [], [], QueryBa
                     }
                 }
             } else { // Related
+
+                const new_related_words : { [x: string] : relatedWordsBagItems } = {
+                    ...state.queryBagSlice.related_words,
+                        [textInput]: {
+                            "addedBy": addedBy,
+                            "weight": newWeight,
+                            "added":true
+                        }
+                }
+                let new_related_words_count = 0
+                
+                Object.keys(new_related_words).map((key : string) => {
+                    if (new_related_words[key].added === true) {
+                        new_related_words_count++;
+                    }
+                })
+
+
                 return {
                     ...state,
                     queryBagSlice: {
                         ...state.queryBagSlice,
                         related_words_text_input: "",
                         related_words_weight_input: "",
-                        related_words: {
-                            ...state.queryBagSlice.related_words,
-                            [textInput]: {
-                                "addedBy": addedBy,
-                                "weight": newWeight,
-                                "added":true
-                            }
-                        }
+                        related_words: new_related_words,
+                        related_words_count: new_related_words_count
                     }
                 }
             }
@@ -310,6 +325,7 @@ export const createQueryBagSlice : StateCreator<SearchStoreType, [], [], QueryBa
             queryBagSlice: {
                 ...state.queryBagSlice,
                 related_words: {},
+                related_words_count: 0,
                 must_have_words: new Set<string>(),
                 forbidden_words: new Set<string>()
             }
@@ -357,23 +373,29 @@ export const createQueryBagSlice : StateCreator<SearchStoreType, [], [], QueryBa
                     ...state,
                     queryBagSlice: {
                         ...state.queryBagSlice,
-                        related_words: {}
+                        related_words: {},
+                        related_words_count: 0
                     }
                 }
             }
             else {
+                let new_related_words_count = 0
                 Object.keys(state.queryBagSlice.related_words).filter((term : string) => {
                     if (!(words_to_delete.has(term))) { //Only returns items NOT in the deletion list.
                         copy[term] = state.queryBagSlice.related_words[term]
+                    }
+                })
+                Object.keys(copy).forEach((term : string) => {
+                    if (copy[term].added) {
+                        new_related_words_count++;
                     }
                 })
                 return {
                     ...state,
                     queryBagSlice: {
                         ...state.queryBagSlice,
-                        related_words: {
-                            ...copy
-                        }
+                        related_words: copy,
+                        related_words_count: new_related_words_count
                     }
                 }
             }

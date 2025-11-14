@@ -12,3 +12,5 @@ not_good_indices/
 10_indices/
 frontend/search/*.js
 frontend/search/src/**/*.js
+
+.env*

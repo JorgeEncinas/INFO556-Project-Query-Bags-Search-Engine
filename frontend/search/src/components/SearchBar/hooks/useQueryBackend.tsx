@@ -8,6 +8,7 @@ import type { Results } from "../../../types/resultsTypes";
 import { useSearchStore } from "../../../store/searchStore";
 import type { relatedWordsBagItems } from "../../../types/queryBagTypes";
 import { useNavigate } from "react-router";
+import { toast } from "react-toastify";
 
 /**
  * This custom hook contains the logic for doing requests to the backend. There are two requests to do:
@@ -24,12 +25,12 @@ const useQueryBackend = () => {
     const navigate = useNavigate()
     const { query, setDisplayedPage } = useSearchStore((state) => state)
     
-    const {
-        related_words,
-        forbidden_words,
-        must_have_words,
-        addSuggestedRelatedWords
-    } = useSearchStore((state) => state.queryBagSlice)
+    const related_words = useSearchStore((state) => state.queryBagSlice.related_words)
+    const forbidden_words = useSearchStore((state) => state.queryBagSlice.forbidden_words)
+    const must_have_words = useSearchStore((state) => state.queryBagSlice.must_have_words)
+    const related_words_count = useSearchStore((state) => state.queryBagSlice.related_words_count)
+    const must_have_words_count = useSearchStore((state) => state.queryBagSlice.must_have_words).size
+    const addSuggestedRelatedWords = useSearchStore((state) => state.queryBagSlice.addSuggestedRelatedWords)
 
     const setResults = useSearchStore((state) => state.resultsSlice.setResults)
 
@@ -42,8 +43,24 @@ const useQueryBackend = () => {
      * @returns nothing.
      */
     const getQueryResults = async () => {
-        if (query === "") return
-
+        if (query === "" && related_words_count < 1 && must_have_words_count < 1) {
+            toast.warn(
+                "Please enter something to search in the search bar or on either Must-Have words, or Related words", {
+                    position: "bottom-right",
+                    autoClose: 8000,
+                    closeOnClick: true,
+                    theme: "dark"
+                }
+            )
+            return
+        }
+        let loadingToast = toast.loading(
+            "Searching...",
+            {
+                position:"bottom-right",
+                theme: "dark"
+            }
+        )
         let sentRelatedWords : { [key: string] : any } = {}
 
         Object.entries(related_words).forEach(([key, items] : [
@@ -67,7 +84,7 @@ const useQueryBackend = () => {
         }
         console.log("Searching with...", requestContent)
         let axiosResponse = await axios.post(
-            "http://localhost:5000/search",
+            `${import.meta.env.VITE_BACKEND_URL}/search`,
             requestContent
         )
         let results : Results = axiosResponse.data
@@ -79,6 +96,7 @@ const useQueryBackend = () => {
         setResults(results)
         setDisplayedPage("results")
         navigate("/results")
+        toast.dismiss(loadingToast)
     }
 
     /**
@@ -97,7 +115,7 @@ const useQueryBackend = () => {
         }
         console.log("Searching for suggestions with...", requestContent)
         let axiosResponse = await axios.post(
-            "http://localhost:5000/related",
+            `${import.meta.env.VITE_BACKEND_URL}/related`,
             requestContent
         )
         let data = axiosResponse.data

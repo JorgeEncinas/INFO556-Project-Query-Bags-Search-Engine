@@ -83,7 +83,7 @@ const QueryBag = ({ bagType, wordInput, weightInput } : {
                 setQueryBagWeightInput={setQueryBagWeightInput}
             />
             <div className={`${import.meta.env.VITE_BORDERS === "ON" ? "border border-blue-500" : ""} 
-                w-[100%] h-[100%] flex flex-col justify-end items-center
+                w-[100%] h-[100%] flex flex-col justify-start mt-2 items-center
             `}>
                 <QBTagCloudWrapper bagType={bagType} />
                 <QBTitle

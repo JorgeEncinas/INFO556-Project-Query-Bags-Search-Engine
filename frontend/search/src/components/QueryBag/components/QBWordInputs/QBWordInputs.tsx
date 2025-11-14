@@ -2,8 +2,11 @@
  * @fileoverview This file defines the Input Fields that go over each Query Bag. The logic
  * varies slightly for the "Related Words" bag, since it has a "weight" property that can be adjusted.
  */
+import { toast } from "react-toastify"
 import { useSearchStore } from "../../../../store/searchStore"
 import type { queryBagTypes } from "../../../../types/queryBagTypes"
+import AddSvg from "../../../../assets/AddSvg"
+import { useState } from "react"
 
 /**
  * This component renders an Input Field over the Query Bag that it is contained within.
@@ -33,6 +36,7 @@ const QBWordInputs = ({ bagType, wordInput, weightInput, isInputVisible, disable
 }) => {
 
     const addUpdateConstraintWords = useSearchStore((state) => state.queryBagSlice.addUpdateConstraintWords)
+    const [isAddBeingHovered, setIsAddBeingHovered] = useState<boolean>(false)
     
     if(bagType !== "related") {
         return(
@@ -60,10 +64,44 @@ const QBWordInputs = ({ bagType, wordInput, weightInput, isInputVisible, disable
                                     "user"
                                 )
                                 setQueryBagTextInput("", bagType)
+                            } else {
+                                toast.warn(
+                                    "The field for adding a term is blank.",
+                                    {
+                                        position:"bottom-right",
+                                        theme:"dark"
+                                    }
+                                )
                             }
                         }
                     }}
                 />
+                <div
+                    className={"ml-1 hover:cursor-pointer"}
+                    onClick={() => {
+                        if(wordInput.length > 0) {
+                            addUpdateConstraintWords(
+                                wordInput,
+                                weightInput="1",
+                                bagType=bagType,
+                                "user"
+                            )
+                            setQueryBagTextInput("", bagType)
+                        } else {
+                            toast.warn(
+                                "The field for adding a term is blank.",
+                                {
+                                    position:"bottom-right",
+                                    theme:"dark"
+                                }
+                            )
+                        }
+                    }}
+                    onMouseEnter={() => setIsAddBeingHovered(true)}
+                    onMouseLeave={() => setIsAddBeingHovered(false)}
+                >
+                    <AddSvg isBeingHovered={isAddBeingHovered} />
+                </div>
             </div>
         </div> 
         )
@@ -89,6 +127,28 @@ const QBWordInputs = ({ bagType, wordInput, weightInput, isInputVisible, disable
                     value={wordInput}
                     onKeyDown={(e) => {
                         if(e.key === "Enter") {
+                            // Check that no fields are empty
+                            if (wordInput === "" || weightInput === "") {
+                                toast.warn(
+                                    `Please fill both weight and word fields to add a term to "Related Words".`,
+                                    {
+                                        position:"bottom-right",
+                                        theme:"dark"
+                                    }
+                                )
+                                return
+                            }
+                            let newWeight = Number(weightInput)
+                            if(isNaN(newWeight)) { //Otherwise we don't really care about the weight!
+                                toast.warn(
+                                    `The weight you specified could not be interpreted as a number`,
+                                    {
+                                        position: "bottom-right",
+                                        theme:"dark"
+                                    }
+                                )
+                                return
+                            }
                             addUpdateConstraintWords(
                                 wordInput,
                                 weightInput=weightInput,
@@ -109,6 +169,27 @@ const QBWordInputs = ({ bagType, wordInput, weightInput, isInputVisible, disable
                     }}
                     onKeyDown={(e) => {
                         if (e.key === "Enter") {
+                            if (wordInput === "" || weightInput === "") {
+                                toast.warn(
+                                    `Please fill both weight and word fields to add a term to "Related Words".`,
+                                    {
+                                        position:"bottom-right",
+                                        theme:"dark"
+                                    }
+                                )
+                                return
+                            }
+                            let newWeight = Number(weightInput)
+                            if(isNaN(newWeight)) { //Otherwise we don't really care about the weight!
+                                toast.warn(
+                                    `The weight you specified could not be interpreted as a number`,
+                                    {
+                                        position: "bottom-right",
+                                        theme:"dark"
+                                    }
+                                )
+                                return
+                            }
                             addUpdateConstraintWords(
                                 wordInput,
                                 weightInput=weightInput,
@@ -119,6 +200,42 @@ const QBWordInputs = ({ bagType, wordInput, weightInput, isInputVisible, disable
                     }}
                     value={weightInput}
                 />
+                <div
+                    className={"ml-1 hover:cursor-pointer"}
+                    onClick={() => {
+                        if (wordInput === "" || weightInput === "") {
+                            toast.warn(
+                                `Please fill both weight and word fields to add a term to "Related Words".`,
+                                {
+                                    position:"bottom-right",
+                                    theme:"dark"
+                                }
+                            )
+                            return
+                        }
+                        let newWeight = Number(weightInput)
+                        if(isNaN(newWeight)) { //Otherwise we don't really care about the weight!
+                            toast.warn(
+                                `The weight you specified could not be interpreted as a number`,
+                                {
+                                    position: "bottom-right",
+                                    theme:"dark"
+                                }
+                            )
+                            return
+                        }
+                        addUpdateConstraintWords(
+                            wordInput,
+                            weightInput=weightInput,
+                            bagType=bagType,
+                            "user"
+                        )
+                    }}
+                    onMouseEnter={() => setIsAddBeingHovered(true)}
+                    onMouseLeave={() => setIsAddBeingHovered(false)}
+                >
+                    <AddSvg isBeingHovered={isAddBeingHovered} />
+                </div>
             </div>
         </div>
     )

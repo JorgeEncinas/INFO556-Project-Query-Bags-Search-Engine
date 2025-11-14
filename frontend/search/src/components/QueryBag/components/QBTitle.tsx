@@ -22,7 +22,7 @@ const QBTitle = ({ displayName, deleteFn } : {
             id={"query-bag-title-and-clear-area"}
             className={"flex justify-center items-center px-1 mt-2 "}
         >
-            <h2 className={"font-bold select-none"}>{displayName} words</h2>
+            <h2 className={"font-bold select-none"}>{displayName} Words</h2>
             <button
                 onClick={() => {
                     deleteFn()

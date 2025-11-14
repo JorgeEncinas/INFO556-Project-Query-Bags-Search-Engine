@@ -2,6 +2,9 @@
  * @fileoverview Component to render each of the results retrieved by the Search Engine.
  */
 
+import { useState } from "react";
+import ResultItemArrowSvg from "../../../assets/ResultItemArrowSvg";
+
 /**
  * Component that renders one of the retrieved results from the backend when doing a query.
  * It is a simple display of title, body, and url.
@@ -16,17 +19,31 @@ const ResultItem = ({ title, body, url } : {
     body: string,
     url : string
 }) => {
+
+    const [isItemBeingHovered, setIsItemBeingHovered] = useState<boolean>(false)
+
     return (
         <div
             className={` 
                 ${import.meta.env.VITE_BORDERS === "ON" ? "border border-b-emerald-500" : ""}
-                flex flex-col justify-center items-start px-2 py-4 w-[70%]`}
+                flex flex-col justify-center items-start px-2 py-4 w-[90%]`}
         >   
-            <h3
-                className={" p-2 font-semibold text-[18px] text-wrap"}
+            <a 
+                className={"w-[70%] flex justify-start items-center group"}
+                href={url}
+                target={"_blank"}
+                onMouseEnter={() => setIsItemBeingHovered(true)}
+                onMouseLeave={() => setIsItemBeingHovered(false)}
             >
-                {title}
-            </h3>
+                <div
+                    className={" p-2 font-semibold text-[18px] text-wrap group-hover:text-[#6FB6D9]"}
+                    
+                    
+                >
+                    {title}
+                </div>
+                <ResultItemArrowSvg isBeingHovered={isItemBeingHovered} />
+            </a>
             <div
                 className={"flex justify-start items-center w-[100%]"}
             >
@@ -36,7 +53,7 @@ const ResultItem = ({ title, body, url } : {
                 className={" flex flex-col items-start justify-center pl-2"}
             >
                 <p className={"text-wrap text-[14px] w-[100%] text-justify py-1"}>
-                    {body.substring(0,200)}
+                    {body.substring(0,500)}...
                 </p>
                 <p
                     className={"text-[11px] text-blue-300 cursor-pointer"}
