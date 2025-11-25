@@ -15,4 +15,7 @@ frontend/search/src/**/*.js
 
 .env*
 static_old/
+static_old_old/
+static_dev/
+static_prod/
 README_files/

@@ -33,21 +33,21 @@ const HomeTitle = () => {
             }}
           >
           <BurlapSvg />
-          <p className={"text-2xl my-2 py-2 ml-1 text-center font-bold"}>BagSearch</p>
+          <p className={"text-2xl my-2 py-2 ml-1 text-center font-bold text-white"}>BagSearch</p>
         </div>
       )
     }
 
     return (
         <div
-            className={"flex justify-center items-center w-[100%]"}
+            className={"flex justify-center items-center w-[100%] cursor-pointer"}
             onClick={() => {
               setDisplayedPage("home")
               navigate("/")
             }}
           >
           <BurlapSvg />
-          <p className={"text-3xl my-2 py-2 ml-1 text-center font-bold"}>BagSearch</p>
+          <p className={"text-3xl my-2 py-2 ml-1 text-center font-bold text-white"}>BagSearch</p>
         </div>
     )
 }

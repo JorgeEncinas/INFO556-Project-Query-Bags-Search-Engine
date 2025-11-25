@@ -7,6 +7,7 @@ import { useSearchStore } from "../../../../store/searchStore"
 import type { queryBagTypes } from "../../../../types/queryBagTypes"
 import AddSvg from "../../../../assets/AddSvg"
 import { useState } from "react"
+import QBWeightButton from "./QBWeightButton"
 
 /**
  * This component renders an Input Field over the Query Bag that it is contained within.
@@ -37,6 +38,7 @@ const QBWordInputs = ({ bagType, wordInput, weightInput, isInputVisible, disable
 
     const addUpdateConstraintWords = useSearchStore((state) => state.queryBagSlice.addUpdateConstraintWords)
     const [isAddBeingHovered, setIsAddBeingHovered] = useState<boolean>(false)
+    const [weightValue, setWeightValue] = useState<"small" | "mid" | "big">("mid")
     
     if(bagType !== "related") {
         return(
@@ -128,9 +130,9 @@ const QBWordInputs = ({ bagType, wordInput, weightInput, isInputVisible, disable
                     onKeyDown={(e) => {
                         if(e.key === "Enter") {
                             // Check that no fields are empty
-                            if (wordInput === "" || weightInput === "") {
+                            if (wordInput === "") {
                                 toast.warn(
-                                    `Please fill both weight and word fields to add a term to "Related Words".`,
+                                    `Please fill the word field to add a term to "Related Words".`,
                                     {
                                         position:"bottom-right",
                                         theme:"dark"
@@ -138,20 +140,14 @@ const QBWordInputs = ({ bagType, wordInput, weightInput, isInputVisible, disable
                                 )
                                 return
                             }
-                            let newWeight = Number(weightInput)
-                            if(isNaN(newWeight)) { //Otherwise we don't really care about the weight!
-                                toast.warn(
-                                    `The weight you specified could not be interpreted as a number`,
-                                    {
-                                        position: "bottom-right",
-                                        theme:"dark"
-                                    }
-                                )
-                                return
-                            }
+                            let newWeight = weightValue === "small"
+                                ? 0.6 //small 
+                                : weightValue === "mid" 
+                                    ? 0.8 //mid
+                                    : 1.0 //large
                             addUpdateConstraintWords(
                                 wordInput,
-                                weightInput=weightInput,
+                                weightInput=newWeight.toString(),
                                 bagType=bagType,
                                 "user"
                             )
@@ -159,53 +155,36 @@ const QBWordInputs = ({ bagType, wordInput, weightInput, isInputVisible, disable
                     }}
                     disabled={disabled}
                 />
-                <input
-                    type="text"
-                    className={`bg-white rounded-r-lg text-black w-[25%] outline-none p-1 border border-l-gray-400`}
-                    placeholder="weight"
-                    pattern={"[0-9]+"}
-                    onChange={(e) => {
-                        setQueryBagWeightInput(e.target.value, bagType)
-                    }}
-                    onKeyDown={(e) => {
-                        if (e.key === "Enter") {
-                            if (wordInput === "" || weightInput === "") {
-                                toast.warn(
-                                    `Please fill both weight and word fields to add a term to "Related Words".`,
-                                    {
-                                        position:"bottom-right",
-                                        theme:"dark"
-                                    }
-                                )
-                                return
-                            }
-                            let newWeight = Number(weightInput)
-                            if(isNaN(newWeight)) { //Otherwise we don't really care about the weight!
-                                toast.warn(
-                                    `The weight you specified could not be interpreted as a number`,
-                                    {
-                                        position: "bottom-right",
-                                        theme:"dark"
-                                    }
-                                )
-                                return
-                            }
-                            addUpdateConstraintWords(
-                                wordInput,
-                                weightInput=weightInput,
-                                bagType=bagType,
-                                "user"
-                            )
-                        }
-                    }}
-                    value={weightInput}
-                />
+                <div className={" flex flex-col items-center justify-center w-[28%] bg-white h-8 rounded-r-lg"}>
+                    <div className={"relative h-px"}>
+                        <div className={"absolute flex items-center justify-center w-full -top-7 text-white"}>
+                            <h3>Importance</h3>
+                        </div>
+                    </div>
+                    <div className={"flex justify-center items-center space-x-1"}>
+                        <QBWeightButton 
+                            displayText={"small"}
+                            isActive={weightValue === "small"}
+                            onClickFunction={() => {setWeightValue("small")}}
+                        />
+                        <QBWeightButton 
+                            displayText={"mid"}
+                            isActive={weightValue === "mid"}
+                            onClickFunction={() => {setWeightValue("mid")}}
+                        />
+                        <QBWeightButton 
+                            displayText={"large"}
+                            isActive={weightValue === "big"}
+                            onClickFunction={() => {setWeightValue("big")}}
+                        />
+                    </div>
+                </div>
                 <div
                     className={"ml-1 hover:cursor-pointer"}
                     onClick={() => {
-                        if (wordInput === "" || weightInput === "") {
+                        if (wordInput === "") {
                             toast.warn(
-                                `Please fill both weight and word fields to add a term to "Related Words".`,
+                                `Please fill the word field to add a term to "Related Words".`,
                                 {
                                     position:"bottom-right",
                                     theme:"dark"
@@ -213,20 +192,14 @@ const QBWordInputs = ({ bagType, wordInput, weightInput, isInputVisible, disable
                             )
                             return
                         }
-                        let newWeight = Number(weightInput)
-                        if(isNaN(newWeight)) { //Otherwise we don't really care about the weight!
-                            toast.warn(
-                                `The weight you specified could not be interpreted as a number`,
-                                {
-                                    position: "bottom-right",
-                                    theme:"dark"
-                                }
-                            )
-                            return
-                        }
+                        let newWeight = weightValue === "small"
+                                ? 0.6 //small 
+                                : weightValue === "mid" 
+                                    ? 0.8 //mid
+                                    : 1.0 //large
                         addUpdateConstraintWords(
                             wordInput,
-                            weightInput=weightInput,
+                            weightInput=newWeight.toString(),
                             bagType=bagType,
                             "user"
                         )

@@ -7,7 +7,8 @@
     "dev": "vite",
     "production": "vite --mode production",
     "build": "tsc -b && vite build",
-    "buildNoWarn": "tsc --noResolve --noCheck --noEmit && vite build --mode production",
+    "buildNoWarnDev": "tsc --noResolve --noCheck --noEmit && vite build --mode preproduction",
+    "buildNoWarnProduction": "tsc --noResolve --noCheck --noEmit && vite build --mode production",
     "lint": "eslint .",
     "preview": "vite preview"
   },
