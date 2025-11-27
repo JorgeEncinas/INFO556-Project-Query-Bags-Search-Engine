@@ -1,3 +1,12 @@
+/** 
+ * This component renders a button that is small, for selecting a specific weight for the user.
+ * It was narrowed down to "small", "medium", and "large" to lessen the burden placed on users about weight contribution on each term
+ * 
+ * @param props.displayText - The text to show on this button
+ * @param props.isActive - whether this button is the one currently selected
+ * @param props.onClickFunction - The function that should run when this button is pressed (selects this option)
+ * @returns {JSX.Element}
+ */
 const QBWeightButton = ({ displayText, isActive, onClickFunction } : {
     displayText : string,
     isActive : boolean,

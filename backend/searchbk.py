@@ -80,9 +80,9 @@ def search():
     }
     """
     print("Entered search endpoint?")
-    print(request.method) 
+    print(request.method)
     content = request.json #From  https://stackoverflow.com/a/35614301
-    print(content)
+    print("REQUEST CONTENT", content)
     if request.method == "POST": #From https://www.geeksforgeeks.org/python/flask-http-methods-handle-get-post-requests/
         # STEP 0: WEIGHT DEFINITIONS
         original_query_weight = 2.0
@@ -92,6 +92,7 @@ def search():
         # STEP 1: EXTRACT FORM FIELDS
         user_query = content["query"]
         query_bags = content["query_bags"]
+        print("QUERY BAGS", query_bags)
         forbidden_words = query_bags["forbidden_words"] #List
         must_have_words = query_bags["must_have_words"] #List
         related_words = query_bags["related_words"] #Dict where each key tells you who added the word, AND the weight
@@ -118,7 +119,7 @@ def search():
             if findspacer.search(word):
                 new_user_query.append(f"+\"{word}\"")
             else:
-                new_user_query.append(f"-{word}")
+                new_user_query.append(f"+{word}")
 
         # STEP 3.3: RELATED WORDS (& WEIGHTS)
         for word in related_words.keys():

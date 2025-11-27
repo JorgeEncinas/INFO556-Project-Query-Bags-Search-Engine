@@ -1,3 +1,8 @@
+/**
+ * The github icon, used to link to the source code, which is stored in Github.
+ * 
+ * @returns {JSX.Element}
+ */
 const GithubSvg = () => {
     return (
         <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">

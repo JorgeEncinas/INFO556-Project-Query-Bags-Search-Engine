@@ -1,3 +1,9 @@
+/**
+ * This element is a visual "plus" sign that represents an "Add" action. It is used in the button to add a new term.
+ * 
+ * @param props.isBeingHovered - Whether this element's parent container, and thus, this element, is being hovered on.
+ * @returns {JSX.Element}
+ */
 const AddSvg = ({ isBeingHovered } : {
     isBeingHovered : boolean
 }) => {

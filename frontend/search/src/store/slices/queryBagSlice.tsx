@@ -260,13 +260,17 @@ export const createQueryBagSlice : StateCreator<SearchStoreType, [], [], QueryBa
     },
     addUpdateConstraintWords : (textInput : string, weightInput: string, bagType: queryBagTypes, addedBy:"user"|"system") => {
         // Check that no fields are empty
+        //console.log(textInput, weightInput, bagType, addedBy)
         if (textInput === "" || weightInput === "") {
+            //console.log("text or weight was empty")
             return
         }
         let newWeight = Number(weightInput)
         if(bagType === "related" && isNaN(newWeight)) { //Otherwise we don't really care about the weight!
+            //console.log("smth wrong with WEIGHT")
             return
         }
+        console.log(textInput, weightInput, bagType, addedBy)
         // At this point, we're sure that 1) We got a string, 2) we got a valid number
         set((state) => {
             if(bagType === "must-have") {

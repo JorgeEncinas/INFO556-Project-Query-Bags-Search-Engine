@@ -1,3 +1,10 @@
+/**
+ * This is an arrow within a circle, used to show that a result list item can be clicked and will take
+ * the user to another page.
+ * 
+ * @param props.isBeingHovered - Whether the parent element (and thus this one) is being hovered.
+ * @returns {JSX.Element}
+ */
 const ResultItemArrowSvg = ({ isBeingHovered } : {
     isBeingHovered : boolean
 }) => {

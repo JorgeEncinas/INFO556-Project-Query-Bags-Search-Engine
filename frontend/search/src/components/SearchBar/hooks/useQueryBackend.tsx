@@ -78,14 +78,19 @@ const useQueryBackend = () => {
             query: query,
             query_bags: {
                 related_words: sentRelatedWords,
-                must_have_words : must_have_words,
-                forbidden_words: forbidden_words,
+                must_have_words : Array.from(must_have_words),
+                forbidden_words: Array.from(forbidden_words),
             }
         }
         console.log("Searching with...", requestContent)
         let axiosResponse = await axios.post(
             `${import.meta.env.VITE_BACKEND_URL}/search`,
-            requestContent
+            requestContent,
+            {
+                headers: {
+                    "Content-Type": "application/json"
+                }
+            }
         )
         let results : Results = axiosResponse.data
         console.log(results)
