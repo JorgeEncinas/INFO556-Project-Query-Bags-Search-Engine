@@ -185,11 +185,14 @@ def get_related_terms():
         expansion = bo1(bm25.search(query))
         print(type(expansion))
         new_words = ""
+        # STEP 2.1: Try to get the query expansion performed
+        #   I had it fail once, so I added a second method below
         try: 
             new_words = expansion["query"].item()
         except:
             print("Operation 1 failed")
         
+        # STEP 2.2: Try it again but using tolist() and if no words are found then return no suggestions.
         try:
             new_words = expansion["query"].tolist() #From https://stackoverflow.com/a/61071890
             print(f"Converted to list: {new_words}")
@@ -214,7 +217,10 @@ def get_related_terms():
         oq_matches = extract_jtw.findall(query)
 
         # STEP 5: IDENTIFY UNIQUE WORDS FROM THE EXPANSION
+        # Create a Set() of the original query's terms.
         set_oq = set(oq_matches) #From https://stackoverflow.com/a/15768778
+        # Then use that to exclude the terms in the expanded query that are already in
+        # in the original query.
         extended_words = [(term, round(float(weight), 2)) for (term, weight) in matches if matches[0] not in set_oq]
 
         print(f"Extended Words that will be sent: {extended_words}")
