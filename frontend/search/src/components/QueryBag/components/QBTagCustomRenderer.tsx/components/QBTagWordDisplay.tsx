@@ -29,7 +29,7 @@ const QBTagWordDisplay = ({ tag, tagProps } : {
         addUpdateConstraintWords,
         setDisableRelatedWordsTextInput 
     } = useSearchStore((state) => state.queryBagSlice)
-
+    
     return (
         <span
             className={`font-semibold  h-6 select-none 

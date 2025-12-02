@@ -6,7 +6,7 @@ import { toast } from "react-toastify"
 import { useSearchStore } from "../../../../store/searchStore"
 import type { queryBagTypes } from "../../../../types/queryBagTypes"
 import AddSvg from "../../../../assets/AddSvg"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import QBWeightButton from "./QBWeightButton"
 
 /**
@@ -39,6 +39,17 @@ const QBWordInputs = ({ bagType, wordInput, weightInput, isInputVisible, disable
     const addUpdateConstraintWords = useSearchStore((state) => state.queryBagSlice.addUpdateConstraintWords)
     const [isAddBeingHovered, setIsAddBeingHovered] = useState<boolean>(false)
     const [weightValue, setWeightValue] = useState<"small" | "mid" | "big">("mid")
+
+    useEffect(() => {
+        let floatWeight = parseFloat(weightInput)
+        if (floatWeight <= 0.6) {
+            setWeightValue("small")
+        } else if (floatWeight <= 0.7) {
+            setWeightValue("mid")
+        } else {
+            setWeightValue("big") //large
+        }
+    }, [weightInput])
     
     if(bagType !== "related") {
         return(
@@ -143,8 +154,8 @@ const QBWordInputs = ({ bagType, wordInput, weightInput, isInputVisible, disable
                             let newWeight = weightValue === "small"
                                 ? 0.6 //small 
                                 : weightValue === "mid" 
-                                    ? 0.8 //mid
-                                    : 1.0 //large
+                                    ? 0.7 //mid
+                                    : 0.8 //large
                             addUpdateConstraintWords(
                                 wordInput,
                                 weightInput=newWeight.toString(),
@@ -195,8 +206,8 @@ const QBWordInputs = ({ bagType, wordInput, weightInput, isInputVisible, disable
                         let newWeight = weightValue === "small"
                                 ? 0.6 //small 
                                 : weightValue === "mid" 
-                                    ? 0.8 //mid
-                                    : 1.0 //large
+                                    ? 0.7 //mid
+                                    : 0.8 //large
                         addUpdateConstraintWords(
                             wordInput,
                             weightInput=newWeight.toString(),

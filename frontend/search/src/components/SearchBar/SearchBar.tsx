@@ -24,26 +24,20 @@ const SearchBar = () => {
         <div className={" bg-white h-8 flex justify-between items-center px-4 rounded-3xl my-2 w-[50%]"}>
             <div className={"flex justify-start flex-1"}>
               <SearchMagnifierSvg />
-              <input
+              <DebounceInput 
                 type="text"
-                placeholder="Search for something..."
-                className={"border-none focus:border-none focus:outline-none text-black mx-2 w-[92%]"}
+                placeholder={"search for something..."}
                 value={query}
+                className={"border-none focus:border-none focus:outline-none text-black mx-2 w-[92%]"}
+                debounceTimeout={300}
                 onKeyDown={(e) => {
                   if(e.key == "Enter") {
                     getQueryResults()
                   }
                 }}
                 onChange={event => {
+                  console.log("setting query, calling suggestions...", event.target.value)
                   setQuery(event.target.value)
-                }}
-              />
-              <DebounceInput 
-                type="hidden"
-                value={query}
-                className={"hidden"}
-                debounceTimeout={300}
-                onChange={event => {
                   getRelatedSuggestions(event.target.value)
                 }}
               />

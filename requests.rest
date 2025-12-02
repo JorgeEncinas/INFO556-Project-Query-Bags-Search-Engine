@@ -4,7 +4,7 @@ GET http://127.0.0.1:5000/
 ### Base "GET" request to the "search" endpoint to verify it's recognized. "GET" is not allowed though.
 GET http://127.0.0.1:5000/search
 ### Example "POST" request to the backend, verifying that it works.
-POST http://127.0.0.1:5000/search
+POST https://ir-bagsearch.com/search
 Content-Type: application/json
 
 {
@@ -26,7 +26,7 @@ Content-Type: application/json
     }
 }
 ### Example POST request to the /related endpoint, verifying that it works and what the output looks like.
-POST http://127.0.0.1:5000/related
+POST https://ir-bagsearch.com/related
 Content-Type: application/json
 
 {
@@ -55,4 +55,33 @@ Content-Type: application/json
         "must_have_words": [],
         "related_words": {}
     }
+}
+### Example "POST" request to the backend, verifying that it works.
+POST http://127.0.0.1:5000/search
+Content-Type: application/json
+
+{
+    "query": "the andromeda galaxy",
+    "query_bags": {
+        "forbidden_words": ["monkey business"],
+        "must_have_words": ["sun", "star"],
+        "related_words": {
+            "planet": {
+                "addedBy":"user",
+                "weight":1.5
+            },
+            "jupyter": {
+                "addedBy":"system",
+                "weight":1.2
+            }
+
+        }
+    }
+}
+### Example POST request to the /related endpoint, verifying that it works and what the output looks like.
+POST http://127.0.0.1:5000/related
+Content-Type: application/json
+
+{
+    "query":"dancing with the stars"
 }

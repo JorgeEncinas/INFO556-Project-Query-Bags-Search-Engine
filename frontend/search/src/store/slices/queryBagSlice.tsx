@@ -186,23 +186,6 @@ export const createQueryBagSlice : StateCreator<SearchStoreType, [], [], QueryBa
     }),
     setQueryBagWeightInput: ( weight : string) => { //, bagType: queryBagType
         set((state) => {
-            /*if (bagType === "forbidden") {
-                return {
-                    ...state,
-                    queryBagSlice: {
-                        ...state.queryBagSlice,
-                        forbidden_words_weight_input: weight
-                    }
-                }
-            } else if (bagType == "must-have") {
-                return {
-                    ...state,
-                    queryBagSlice: {
-                        ...state.queryBagSlice,
-                        must_have_words_weight_input: weight
-                    }
-                }
-            } */ 
             return {
                 ...state,
                 queryBagSlice: {
@@ -240,10 +223,16 @@ export const createQueryBagSlice : StateCreator<SearchStoreType, [], [], QueryBa
                 term : string,
                 weight : number
             ]) => {
-                if(!(term in related_terms)) {
+                if(!(term in related_terms)) { //Deals with the raw values from the backend
+                    let new_weight = weight <= 0.6
+                        ? 0.6 // Clamping to "small"
+                        : weight <= 1.0 //Between 0.6 and 0.7 ? 
+                            ? 0.7 //Clamping to "mid"
+                            : 0.8 //Clamping to "large"
+
                     related_terms[term] = {
                         addedBy: "system",
-                        weight: Math.min(Math.max(weight, 0.6), 1.0),
+                        weight: new_weight,
                         added: false
                     }
                 }

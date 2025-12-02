@@ -43,6 +43,7 @@ const useQueryBackend = () => {
      * @returns nothing.
      */
     const getQueryResults = async () => {
+        //Check that your search is not empty
         if (query === "" && related_words_count < 1 && must_have_words_count < 1) {
             toast.warn(
                 "Please enter something to search in the search bar or on either Must-Have words, or Related words", {
@@ -54,6 +55,7 @@ const useQueryBackend = () => {
             )
             return
         }
+        //Create the loading toast
         let loadingToast = toast.loading(
             "Searching...",
             {
@@ -61,8 +63,10 @@ const useQueryBackend = () => {
                 theme: "dark"
             }
         )
+        //This object will hold the related words in a format for the backend
         let sentRelatedWords : { [key: string] : any } = {}
 
+        //Iterate over my words, and add them ONLY if they're not gray items (suggestions)
         Object.entries(related_words).forEach(([key, items] : [
             key : string,
             items : relatedWordsBagItems
@@ -73,7 +77,8 @@ const useQueryBackend = () => {
                     weight: items.weight
                 }
             }
-        }) 
+        })
+        // Creating the POST request
         let requestContent = {
             query: query,
             query_bags: {
@@ -83,6 +88,7 @@ const useQueryBackend = () => {
             }
         }
         console.log("Searching with...", requestContent)
+        // Sending it and awaiting an answer with axios
         let axiosResponse = await axios.post(
             `${import.meta.env.VITE_BACKEND_URL}/search`,
             requestContent,
@@ -92,12 +98,15 @@ const useQueryBackend = () => {
                 }
             }
         )
+        // Set the search results received
         let results : Results = axiosResponse.data
         console.log(results)
+        // If we have no results, then go back
         if(!results) {
             console.log("No results found")
             return
         }
+        // If we do have results, then we can move to the results page.
         setResults(results)
         setDisplayedPage("results")
         navigate("/results")
@@ -113,12 +122,15 @@ const useQueryBackend = () => {
      * @returns nothing.
      */
     const getRelatedSuggestions = async (currentQuery : string) => {
+        // If the current query is empty, then we can't ask for suggestions
         if(currentQuery === "") return
 
+        // Creating the request to use in the POST
         let requestContent = {
             query: currentQuery
         }
         console.log("Searching for suggestions with...", requestContent)
+        // Doing the request and waiting with axios
         let axiosResponse = await axios.post(
             `${import.meta.env.VITE_BACKEND_URL}/related`,
             requestContent
@@ -126,11 +138,13 @@ const useQueryBackend = () => {
         let data = axiosResponse.data
         console.log("response", axiosResponse)
         console.log("data ", data.related_words)
+        // If the response is empty, we can't do anything
         if(!data.hasOwnProperty("related_words")) {
             console.log("No related words found")
             return
         }
-
+        // Otherwise, we do have results! set them.
+        
         addSuggestedRelatedWords(data.related_words)
     }
     
