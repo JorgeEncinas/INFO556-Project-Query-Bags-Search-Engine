@@ -224,6 +224,7 @@ export const createQueryBagSlice : StateCreator<SearchStoreType, [], [], QueryBa
                 weight : number
             ]) => {
                 if(!(term in related_terms)) { //Deals with the raw values from the backend
+                    // This clamps the values to three defined values
                     let new_weight = weight <= 0.6
                         ? 0.6 // Clamping to "small"
                         : weight <= 1.0 //Between 0.6 and 0.7 ? 

@@ -4,7 +4,7 @@ GET http://127.0.0.1:5000/
 ### Base "GET" request to the "search" endpoint to verify it's recognized. "GET" is not allowed though.
 GET http://127.0.0.1:5000/search
 ### Example "POST" request to the backend, verifying that it works.
-POST https://ir-bagsearch.com/search
+POST http://127.0.0.1:5000/search
 Content-Type: application/json
 
 {
@@ -26,7 +26,7 @@ Content-Type: application/json
     }
 }
 ### Example POST request to the /related endpoint, verifying that it works and what the output looks like.
-POST https://ir-bagsearch.com/related
+POST http://127.0.0.1:5000/related
 Content-Type: application/json
 
 {

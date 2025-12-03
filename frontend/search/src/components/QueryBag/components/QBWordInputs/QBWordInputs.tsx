@@ -40,6 +40,10 @@ const QBWordInputs = ({ bagType, wordInput, weightInput, isInputVisible, disable
     const [isAddBeingHovered, setIsAddBeingHovered] = useState<boolean>(false)
     const [weightValue, setWeightValue] = useState<"small" | "mid" | "big">("mid")
 
+    /**
+     * This useEffect checks the weight value and turns it into the
+     * corresponding string: "small", "mid", or "big".
+     */
     useEffect(() => {
         let floatWeight = parseFloat(weightInput)
         if (floatWeight <= 0.6) {

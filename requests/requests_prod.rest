@@ -1,0 +1,145 @@
+### /* Requests done with consulting https://brianbunke.com/blog/2019/09/16/rest-client-vs-code/ */
+### ------------- "/" BASE REQUEST (RETURNS HTML) --------------------
+### Base "GET" request to the main page
+GET https://www.ir-bagsearch.com/
+### ------------- "/search" API REQUEST (RETURNS HTML) --------------------
+### Example "POST" request to the backend
+POST https://www.ir-bagsearch.com/search
+Content-Type: application/json
+
+{
+    "query": "the andromeda galaxy",
+    "query_bags": {
+        "forbidden_words": ["monkey business"],
+        "must_have_words": ["sun", "star"],
+        "related_words": {
+            "planet": {
+                "addedBy":"user",
+                "weight":1.5
+            },
+            "jupyter": {
+                "addedBy":"system",
+                "weight":1.2
+            }
+
+        }
+    }
+}
+### ------------- "/related" API REQUEST --------------------
+### Example POST request to the /related endpoint
+POST https://www.ir-bagsearch.com/related
+Content-Type: application/json
+
+{
+    "query":"dancing with the stars"
+}
+### ------------- "/search" Forbidden Words test --------------------
+### Checking if "Forbidden Words" indeed works (Part 1).
+### Execute this query, then compare with the one below.
+POST https://www.ir-bagsearch.com/search
+Content-Type: application/json
+
+{
+    "query": "mario bros",
+    "query_bags": {
+        "forbidden_words": [],
+        "must_have_words": [],
+        "related_words": {}
+    }
+}
+### Checking if "Forbidden Words" indeed works (Part 2).
+### Note that articles where PyTerrier detected "Toad"
+### will be excluded
+POST https://www.ir-bagsearch.com/search
+Content-Type: application/json
+
+{
+    "query": "mario bros",
+    "query_bags": {
+        "forbidden_words": ["toad"],
+        "must_have_words": [],
+        "related_words": {}
+    }
+}
+### ------------- "/search" Must-Have Words test --------------------
+### Checking if "Must-Have Words" indeed works (Part 1). 
+### Execute this request, then the one below
+### and compare results
+POST https://www.ir-bagsearch.com/search
+Content-Type: application/json
+
+{
+    "query": "mario bros",
+    "query_bags": {
+        "forbidden_words": [],
+        "must_have_words": [],
+        "related_words": {}
+    }
+}
+### Checking if "Must-Have Words" indeed works (Part 2). 
+### Note that more "peach" articles appear.
+POST https://www.ir-bagsearch.com/search
+Content-Type: application/json
+
+{
+    "query": "mario bros",
+    "query_bags": {
+        "forbidden_words": [],
+        "must_have_words": ["peach"],
+        "related_words": {}
+    }
+}
+### ------------- "/search" Related Words test --------------------
+### TEST 1 - user adds luigi - weight 0.8
+POST https://www.ir-bagsearch.com/search
+Content-Type: application/json
+
+{
+    "query": "mario bros",
+    "query_bags": {
+        "forbidden_words": [],
+        "must_have_words": [],
+        "related_words": {
+            "luigi": {
+                "addedBy":"user",
+                "weight":1.2
+            }
+        }
+    }
+}
+### TEST 2 - system adds luigi - weight 0.8
+POST https://www.ir-bagsearch.com/search
+Content-Type: application/json
+
+{
+    "query": "mario bros",
+    "query_bags": {
+        "forbidden_words": [],
+        "must_have_words": [],
+        "related_words": {
+            "luigi": {
+                "addedBy":"system",
+                "weight":0.8
+            }
+        }
+    }
+}
+### TEST 3 - Trying a different weight
+### This may yield the same results or different ones,
+### the important thing is testing that the API works.
+POST https://www.ir-bagsearch.com/search
+Content-Type: application/json
+
+{
+    "query": "mario bros",
+    "query_bags": {
+        "forbidden_words": [],
+        "must_have_words": [],
+        "related_words": {
+            "luigi": {
+                "addedBy":"system",
+                "weight":0.6
+            }
+        }
+    }
+}

@@ -1,0 +1,87 @@
+### /* Requests done with consulting https://brianbunke.com/blog/2019/09/16/rest-client-vs-code/ */
+### Base "GET" request to the main page to test it's working
+GET http://127.0.0.1:5000/
+### Base "GET" request to the "search" endpoint to verify it's recognized. "GET" is not allowed though.
+GET http://127.0.0.1:5000/search
+### Example "POST" request to the backend, verifying that it works.
+POST http://127.0.0.1:5000/search
+Content-Type: application/json
+
+{
+    "query": "the andromeda galaxy",
+    "query_bags": {
+        "forbidden_words": ["monkey business"],
+        "must_have_words": ["sun", "star"],
+        "related_words": {
+            "planet": {
+                "addedBy":"user",
+                "weight":1.5
+            },
+            "jupyter": {
+                "addedBy":"system",
+                "weight":1.2
+            }
+
+        }
+    }
+}
+### Example POST request to the /related endpoint, verifying that it works and what the output looks like.
+POST http://127.0.0.1:5000/related
+Content-Type: application/json
+
+{
+    "query":"dancing with the stars"
+}
+### Checking if "Forbidden Words" indeed works (Part 1).
+POST http://127.0.0.1:5000/search
+Content-Type: application/json
+
+{
+    "query": "apple",
+    "query_bags": {
+        "forbidden_words": [],
+        "must_have_words": [],
+        "related_words": {}
+    }
+}
+### Checking if "Forbidden Words" indeed works (Part 2). Note that one article on "Apple Trees" now is not there.
+POST http://127.0.0.1:5000/search
+Content-Type: application/json
+
+{
+    "query": "apple",
+    "query_bags": {
+        "forbidden_words": ["tree"],
+        "must_have_words": [],
+        "related_words": {}
+    }
+}
+### Example "POST" request to the backend, verifying that it works.
+POST http://127.0.0.1:5000/search
+Content-Type: application/json
+
+{
+    "query": "the andromeda galaxy",
+    "query_bags": {
+        "forbidden_words": ["monkey business"],
+        "must_have_words": ["sun", "star"],
+        "related_words": {
+            "planet": {
+                "addedBy":"user",
+                "weight":1.5
+            },
+            "jupyter": {
+                "addedBy":"system",
+                "weight":1.2
+            }
+
+        }
+    }
+}
+### Example POST request to the /related endpoint, verifying that it works and what the output looks like.
+POST http://127.0.0.1:5000/related
+Content-Type: application/json
+
+{
+    "query":"dancing with the stars"
+}

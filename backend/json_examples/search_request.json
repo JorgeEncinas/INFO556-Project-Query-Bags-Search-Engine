@@ -1,5 +1,5 @@
 {
-    "search":"Flask tool",
+    "query":"Flask tool",
     "query_bags": {
         "forbidden_words":[
             "bottle"
@@ -9,8 +9,12 @@
         ],
         "related_words": {
             "Django": {
-                "added_by": "system",
+                "addedBy": "system",
                 "weight": 1.0
+            },
+            "python": {
+                "addedBy": "user",
+                "weight": 0.6
             }
         }
     }
