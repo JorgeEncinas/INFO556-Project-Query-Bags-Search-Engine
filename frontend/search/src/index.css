@@ -95,17 +95,3 @@ html, body, #root {
     transform: translateX(0px);
   }
 }
-
-/* From the default template created by Vite */
-@media (prefers-color-scheme: light) {
-  :root {
-    color: #213547;
-    background-color: #ffffff;
-  }
-  a:hover {
-    color: #747bff;
-  }
-  button {
-    background-color: #f9f9f9;
-  }
-}
