@@ -3,7 +3,7 @@
 This project is a Search Engine created with PyTerrier. The special twist to it is that it adds a visual component
 to specify term requirement, term exclusion, and query expansion; features that are usually widely available in search engines, but not always shown to the average user. My objective is to make these features visually explicit and easy to handle for users.
 
-These constraints are three:
+These features are implemented through a visual component I call a "Query Bag", and there are three of them:
 
 - **Must-have words:** You can specify words that the results must have somewhere in the page.
 - **Forbidden words:** You can specify words that the results must absolutely not have anywhere in the page.
