@@ -11,11 +11,9 @@ app = Flask(
 CORS(app) #From https://pypi.org/project/flask-cors/
 
 # SECTION: PYTERRIER INITIALIZATION -----------------------------------------------------------------------------------
-#index_path = Path() #From https://pyterrier.readthedocs.io/en/latest/terrier-index-api.html
-#"E:/code/ua/s2/info556/pyterrier_ui/backend/indices/msmarco-document"
 
 # INDEX
-index = pt.IndexFactory.of("E:/code/ua/s2/info556/pyterrier_ui/backend/indices/msmarco-document/data.properties") #str/index_path
+index = pt.IndexFactory.of("E:/code/ua/s2/info556/pyterrier_ui/backend/indices/msmarco-document/data.properties")
 bm25 = pt.terrier.Retriever(index, wmodel="BM25")   # RETRIEVER
 bo1 = pt.rewrite.Bo1QueryExpansion(index)           # QUERY EXPANSION
 
@@ -135,7 +133,7 @@ def search():
 
         # STEP 4: CONSOLIDATE ALL TERMS INTO A STRING
         complete_query = " ".join(new_user_query)
-        print(complete_query) #TODO DELETE THIS PRINT
+        print(complete_query)
 
         # STEP 5: SEARCH
         search_results = bm25.search(complete_query)
@@ -144,11 +142,7 @@ def search():
         search_data = text_getter(search_results[:100])
 
         trimmed_data = search_data[["title", "body", "url"]] #From https://stackoverflow.com/a/61142647
-        return trimmed_data.to_json()
-        #return jsonify({
-        #    "success":True,
-        #    "data": trimmed_data.to_json() # From https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.to_json.html
-        #})
+        return trimmed_data.to_json() # From https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.to_json.html
     # ALTERNATIVE FLOW: UNAUTHORIZED ACCESS. Return error  
     else:
         print("Entered get?")
