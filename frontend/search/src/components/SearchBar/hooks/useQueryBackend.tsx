@@ -55,6 +55,14 @@ const useQueryBackend = () => {
             )
             return
         }
+        // Let's also clean the query
+        let queryCasePattern = /[\'\"\-\+]+/g // Catches certain characters that might break the program
+        let queryCleaned = query.replaceAll(queryCasePattern, "")
+        //console.log(`${query} was modified to ${queryCleaned}`)
+
+        // Protects against queries that would be empty as well.
+        if (queryCleaned === "") return
+        
         //Create the loading toast
         let loadingToast = toast.loading(
             "Searching...",
@@ -80,7 +88,7 @@ const useQueryBackend = () => {
         })
         // Creating the POST request
         let requestContent = {
-            query: query,
+            query: queryCleaned,
             query_bags: {
                 related_words: sentRelatedWords,
                 must_have_words : Array.from(must_have_words),
@@ -88,29 +96,38 @@ const useQueryBackend = () => {
             }
         }
         console.log("Searching with...", requestContent)
-        // Sending it and awaiting an answer with axios
-        let axiosResponse = await axios.post(
-            `${import.meta.env.VITE_BACKEND_URL}/search`,
-            requestContent,
-            {
-                headers: {
-                    "Content-Type": "application/json"
+        try { // Try/catch syntax consulted from https://www.w3schools.com/js/js_errors.asp
+            // Sending it and awaiting an answer with axios
+            let axiosResponse = await axios.post(
+                `${import.meta.env.VITE_BACKEND_URL}/search`,
+                requestContent,
+                {
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    timeout: 10000 //Ten seconds
                 }
+            )
+            // Set the search results received
+            let results : Results = axiosResponse.data
+            console.log(results)
+            // If we have no results, then go back
+            if(!results) {
+                console.log("No results found")
+                return
             }
-        )
-        // Set the search results received
-        let results : Results = axiosResponse.data
-        console.log(results)
-        // If we have no results, then go back
-        if(!results) {
-            console.log("No results found")
-            return
+            // If we do have results, then we can move to the results page.
+            setResults(results)
+            setDisplayedPage("results")
+            navigate("/results")
+            toast.dismiss(loadingToast)
+        } catch (error) {
+            toast.dismiss(loadingToast)
+            toast.error("Oops! something happened and we couldn't process your request!", {
+                theme: "dark"
+            })
         }
-        // If we do have results, then we can move to the results page.
-        setResults(results)
-        setDisplayedPage("results")
-        navigate("/results")
-        toast.dismiss(loadingToast)
+        
     }
 
     /**
@@ -125,27 +142,40 @@ const useQueryBackend = () => {
         // If the current query is empty, then we can't ask for suggestions
         if(currentQuery === "") return
 
+        // Let's also clean the query
+        let queryCasePattern = /[\'\"\-\+]+/g // Catches certain characters that might break the program
+        let queryCleaned = currentQuery.replaceAll(queryCasePattern, "")
+        //console.log(`${currentQuery} was modified to ${queryCleaned}`)
+
+        // Protects against queries that would be empty as well.
+        if (queryCleaned === "") return
+
         // Creating the request to use in the POST
         let requestContent = {
-            query: currentQuery
+            query: queryCleaned
         }
         console.log("Searching for suggestions with...", requestContent)
         // Doing the request and waiting with axios
-        let axiosResponse = await axios.post(
-            `${import.meta.env.VITE_BACKEND_URL}/related`,
-            requestContent
-        )
-        let data = axiosResponse.data
-        console.log("response", axiosResponse)
-        console.log("data ", data.related_words)
-        // If the response is empty, we can't do anything
-        if(!data.hasOwnProperty("related_words")) {
-            console.log("No related words found")
-            return
+        try { // Try/catch syntax consulted from https://www.w3schools.com/js/js_errors.asp
+            let axiosResponse = await axios.post(
+                `${import.meta.env.VITE_BACKEND_URL}/related`,
+                requestContent
+            )
+            let data = axiosResponse.data
+            console.log("response", axiosResponse)
+            console.log("data ", data.related_words)
+            // If the response is empty, we can't do anything
+            if(!data.hasOwnProperty("related_words")) {
+                console.log("No related words found")
+                return
+            }
+            // Otherwise, we do have results! set them.
+            
+            addSuggestedRelatedWords(data.related_words)
+        } catch (error) {
+            console.log("Error getting suggestions", error)
         }
-        // Otherwise, we do have results! set them.
         
-        addSuggestedRelatedWords(data.related_words)
     }
     
     return {
